@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-07-01T15:14:31+00:00</updated><id>/feed.xml</id><title type="html">Lundi Ngantweni</title><subtitle>Cloud engineer, Linux systems administrator, and AWS specialist. Writing about cloud infrastructure, automation, and open-source tools.
+</subtitle><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><entry><title type="html">Preparing Proxmox Template</title><link href="/blog/posts/2024-09-07-proxmox-template/" rel="alternate" type="text/html" title="Preparing Proxmox Template" /><published>2024-09-07T00:00:00+00:00</published><updated>2026-05-18T20:51:23+00:00</updated><id>/blog/posts/proxmox-template</id><content type="html" xml:base="/blog/posts/2024-09-07-proxmox-template/"><![CDATA[<p class="lead">A <a href="https://pve.proxmox.com/wiki/VM_Templates_and_Clones">template</a> is a fully pre-configured operating system image that can used to deploy KVM virtual machines. Creating a special template is usually preferred over cloning an existing VM. Deploying virtual machines from templates is blazing fast, very comfortable and if you use linked clones you can optimize your storage by using base images and thin-provisioning.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#1-perfrom-an-system-update" id="markdown-toc-1-perfrom-an-system-update">1. Perfrom an system update</a></li>
+  <li><a href="#2-create-passwordless-sudo" id="markdown-toc-2-create-passwordless-sudo">2. Create passwordless sudo</a></li>
+  <li><a href="#3-install-cloud-init" id="markdown-toc-3-install-cloud-init">3. Install cloud-init</a></li>
+  <li><a href="#4-confirm-and-clear-machine-id" id="markdown-toc-4-confirm-and-clear-machine-id">4. Confirm and clear machine-id</a></li>
+  <li><a href="#5-confirm-if-the-machine-id-symbolic-link-exists-if-not-you-can-create-one" id="markdown-toc-5-confirm-if-the-machine-id-symbolic-link-exists-if-not-you-can-create-one">5. Confirm if the machine id symbolic link exists, if not you can create one</a></li>
+  <li><a href="#6-remove-ssh_host-keys" id="markdown-toc-6-remove-ssh_host-keys">6. Remove ssh_host keys</a></li>
+  <li><a href="#7-us-the-below-text-script-to-create-one-shot-service-to-regenerate-hostkeys-copypaste-below-to-regenerate_ssh_host_keysservice" id="markdown-toc-7-us-the-below-text-script-to-create-one-shot-service-to-regenerate-hostkeys-copypaste-below-to-regenerate_ssh_host_keysservice">7. Us the below text script to create one shot service to regenerate hostkeys (copy/paste below to regenerate_ssh_host_keys.service)</a>    <ol>
+      <li><a href="#follow-these-steps-to-create-systemd-files" id="markdown-toc-follow-these-steps-to-create-systemd-files">Follow these steps to create systemd files</a></li>
+    </ol>
+  </li>
+  <li><a href="#8-perform-a-repo-clean-and-remove-stale-applications" id="markdown-toc-8-perform-a-repo-clean-and-remove-stale-applications">8. Perform a repo clean and remove stale applications</a></li>
+  <li><a href="#9-clear-the-history-file" id="markdown-toc-9-clear-the-history-file">9. Clear the history file</a></li>
+</ol>
+
+<p class="note" title="Important">Creating a template will automatically convert your current VM to a template, to ensure that every VM launched from the template is unique there are configurations which can be made to ensure that VMs launched from template are consistent and unique</p>
+
+<h4 id="1-perfrom-an-system-update">1. Perfrom an system update</h4>
+
+<p class="note">This is to ensure that your newly launched VM is launched with latest packages, this step is also generally required when launching and accessing new VM to ensure that your system is on latest available packages.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "system-update.sh"</span>
+<span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt upgrade <span class="nt">-y</span>
+</code></pre></div></div>
+
+<h4 id="2-create-passwordless-sudo">2. Create passwordless sudo</h4>
+
+<p class="note">Passwordless sudo just makes managing VM tasks much easier, you have the option of running commands as root but this creates files and folders as root. Leaning towards security best practices using sudo just makes system more secure and passwordless sudo makes running priviledged commands much easier as it won’t prompt for password.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "visudo-config"</span>
+<span class="nb">sudo </span>vi visudo
+
+<span class="c"># Add the following entry (replace with username)</span>
+sysadmin <span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span> NOPASSWD:ALL
+
+OR
+
+<span class="c">#Add the rule for all members of wheel group</span>
+%wheel ALL <span class="o">=</span> <span class="o">(</span>ALL<span class="o">)</span> NOPASSWD: ALL
+</code></pre></div></div>
+
+<h4 id="3-install-cloud-init">3. Install cloud-init</h4>
+
+<p class="note">Install needed utilities, in this command we installing cloud-init, a tool that automates the initialization of cloud and VM instances. You can configure cloud-init to perform a variety of tasks during boot, will be covered in later chapters.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>cloud-init
+</code></pre></div></div>
+
+<h4 id="4-confirm-and-clear-machine-id">4. Confirm and clear machine-id</h4>
+
+<p class="note">The machine ID is usually generated from a random source during system installation or first boot and stays constant for all subsequent boots. Optionally, for stateless systems, it is generated during runtime during early boot if necessary.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cat</span> /etc/machine-id
+<span class="nb">sudo truncate</span> <span class="nt">-s</span> 0 /etc/machine-id
+</code></pre></div></div>
+
+<h4 id="5-confirm-if-the-machine-id-symbolic-link-exists-if-not-you-can-create-one">5. Confirm if the machine id symbolic link exists, if not you can create one</h4>
+
+<p class="note">The /var/lib/dbus/machine-id is generally the directory used by dbus to store the UUID for the machine-ID, by creating the symbolic link we are ensuring that there is consistency between the two locations. This symbolic link should be there by default and creating it is optional.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo ls</span> <span class="nt">-l</span> /var/lib/dbus/machine-id
+<span class="nb">sudo ln</span> <span class="nt">-s</span> /etc/machine-id /var/lib/dbus/machine-id
+</code></pre></div></div>
+
+<h4 id="6-remove-ssh_host-keys">6. Remove ssh_host keys</h4>
+
+<p class="note">Technically, manually removal of the ssh_host keys are not needed as that is done by the script in step.7 as well, prior to obtaining the script I manually removed the keys with the hopes of having them created by cloud-init that does not always go well….</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cd</span> /etc/ssh
+<span class="nb">sudo rm </span>ssh_host_<span class="k">*</span>
+</code></pre></div></div>
+
+<h4 id="7-us-the-below-text-script-to-create-one-shot-service-to-regenerate-hostkeys-copypaste-below-to-regenerate_ssh_host_keysservice">7. Us the below text script to create one shot service to regenerate hostkeys (copy/paste below to regenerate_ssh_host_keys.service)</h4>
+
+<p class="faded">Credit for this script is Jay from learnLinux TV and can be found <a href="https://pastebin.com/CCd0qi8m">here</a>.</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "regenerate_ssh_host_keys.service"
+</span><span class="nn">[Unit]</span>
+<span class="py">Description</span><span class="p">=</span><span class="s">Regenerate SSH host keys</span>
+<span class="py">Before</span><span class="p">=</span><span class="s">ssh.service</span>
+<span class="py">ConditionFileIsExecutable</span><span class="p">=</span><span class="s">/usr/bin/ssh-keygen</span>
+
+<span class="nn">[Service]</span>
+<span class="py">Type</span><span class="p">=</span><span class="s">oneshot</span>
+<span class="py">ExecStartPre</span><span class="p">=</span><span class="s">-/bin/dd if=/dev/hwrng of=/dev/urandom count=1 bs=4096</span>
+<span class="py">ExecStartPre</span><span class="p">=</span><span class="s">-/bin/sh -c "/bin/rm -f -v /etc/ssh/ssh_host_*_key*"</span>
+<span class="py">ExecStart</span><span class="p">=</span><span class="s">/usr/bin/ssh-keygen -A -v</span>
+<span class="py">ExecStartPost</span><span class="p">=</span><span class="s">/bin/systemctl disable regenerate_ssh_host_keys</span>
+
+<span class="nn">[Install]</span>
+<span class="py">WantedBy</span><span class="p">=</span><span class="s">multi-user.target</span>
+</code></pre></div></div>
+
+<h6 id="follow-these-steps-to-create-systemd-files">Follow these steps to create systemd files</h6>
+
+<p class="note">The below steps covers general guidance on creating a systemd unit file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi regenerate_ssh_host_keys.service
+<span class="nb">sudo chown </span>root:root regenerate_ssh_host_keys.service
+<span class="nb">sudo mv </span>regenerate_ssh_host_keys.service /etc/systemd/system
+<span class="nb">sudo </span>systemctl daemon-reload
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>regenerate_ssh_host_keys.service
+</code></pre></div></div>
+
+<h4 id="8-perform-a-repo-clean-and-remove-stale-applications">8. Perform a repo clean and remove stale applications</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt clean
+<span class="nb">sudo </span>apt autoremove
+</code></pre></div></div>
+
+<h4 id="9-clear-the-history-file">9. Clear the history file</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">history</span> <span class="nt">-c</span> <span class="o">&amp;&amp;</span> <span class="nb">history</span> <span class="nt">-w</span>
+</code></pre></div></div>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[This post covers a basic walkthrough on steps I generally take to prepare proxmox VM for template]]></summary></entry><entry><title type="html">Create logical Volume</title><link href="/blog/posts/2024-07-22-create-lv/" rel="alternate" type="text/html" title="Create logical Volume" /><published>2024-07-22T00:00:00+00:00</published><updated>2026-04-06T18:14:31+00:00</updated><id>/blog/posts/create-lv</id><content type="html" xml:base="/blog/posts/2024-07-22-create-lv/"><![CDATA[<p class="lead">In this blog, I will be covering the creation of an LVM volume. To be honest I drafted this article as I configuring my latest ubuntu server and the server’s purpose was to function as a NAS and general purpose file server. Now I know there is alot of NAS services out there with all sorts of goodies however the intention of this is to master the underlying services and overtime I can build my own management interface abd add new feather sets.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#1-check-attributes-of-the-current-volume-group" id="markdown-toc-1-check-attributes-of-the-current-volume-group">1. Check attributes of the current volume group</a></li>
+  <li><a href="#2-we-are-now-going-to-create-a-volume-which-is-200gb-in-size" id="markdown-toc-2-we-are-now-going-to-create-a-volume-which-is-200gb-in-size">2. We are now going to create a volume which is 200GB in size</a></li>
+  <li><a href="#3-now-we-can-see-that-our-volume-has-been-created" id="markdown-toc-3-now-we-can-see-that-our-volume-has-been-created">3. Now we can see that our volume has been created</a></li>
+  <li><a href="#4-to-make-use-of-the-volume-we-require-a-file-system-so-that-we-can-mount-on-our-system" id="markdown-toc-4-to-make-use-of-the-volume-we-require-a-file-system-so-that-we-can-mount-on-our-system">4. To make use of the volume we require a file system so that we can mount on our system</a></li>
+  <li><a href="#5-once-the-file-system-is-created-we-can-now-mount-to-folder-on-our-system-mine-is-mounting-to-storage" id="markdown-toc-5-once-the-file-system-is-created-we-can-now-mount-to-folder-on-our-system-mine-is-mounting-to-storage">5. Once the file system is created we can now mount to folder on our system, mine is mounting to storage</a></li>
+  <li><a href="#6-we-can-now-mount-this-permanently-in-fstab-etcfstab" id="markdown-toc-6-we-can-now-mount-this-permanently-in-fstab-etcfstab">6. We can now mount this permanently in fstab /etc/fstab</a></li>
+</ol>
+
+<p class="note">With the below lsblk output, we can see that my ubuntu volume is already using LVM, this is something that can be done during installation. To learn more about create LVM from scratch reference my documentation here.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "lsblk-output"</span>
+lsblk
+    NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    sda                         8:0    0 745.2G  0 disk
+    ├─sda1                      8:1    0     1M  0 part
+    ├─sda2                      8:2    0     2G  0 part /boot
+    └─sda3                      8:3    0 743.2G  0 part
+    └─ubuntu--vg-ubuntu--lv 252:0    0   100G  0 lvm  /
+    sdb                         8:16   0   1.8T  0 disk
+    sdc                         8:32   0 931.5G  0 disk
+</code></pre></div></div>
+
+<h4 id="1-check-attributes-of-the-current-volume-group">1. Check attributes of the current volume group</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vgs
+    VG        <span class="c">#PV #LV #SN Attr   VSize    VFree</span>
+    ubuntu-vg   1   1   0 wz--n- &lt;743.21g &lt;643.21g
+</code></pre></div></div>
+
+<h4 id="2-we-are-now-going-to-create-a-volume-which-is-200gb-in-size">2. We are now going to create a volume which is 200GB in size</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>lvcreate <span class="nt">-L</span> 200G <span class="nt">-n</span> storage ubuntu-vg
+    Logical volume <span class="s2">"storage"</span> created.
+</code></pre></div></div>
+
+<h4 id="3-now-we-can-see-that-our-volume-has-been-created">3. Now we can see that our volume has been created</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "lsblk-after-create"</span>
+lsblk
+    NAME                      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    sda                         8:0    0 745.2G  0 disk
+    ├─sda1                      8:1    0     1M  0 part
+    ├─sda2                      8:2    0     2G  0 part /boot
+    └─sda3                      8:3    0 743.2G  0 part
+    ├─ubuntu--vg-ubuntu--lv 252:0    0   100G  0 lvm  /
+    └─ubuntu--vg-storage    252:1    0   200G  0 lvm
+</code></pre></div></div>
+
+<h4 id="4-to-make-use-of-the-volume-we-require-a-file-system-so-that-we-can-mount-on-our-system">4. To make use of the volume we require a file system so that we can mount on our system</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mkfs.xfs /dev/ubuntu-vg/storage
+    meta-data<span class="o">=</span>/dev/ubuntu-vg/storage <span class="nv">isize</span><span class="o">=</span>512    <span class="nv">agcount</span><span class="o">=</span>4, <span class="nv">agsize</span><span class="o">=</span>13107200 blks
+    <span class="o">=</span>                       <span class="nv">sectsz</span><span class="o">=</span>512   <span class="nv">attr</span><span class="o">=</span>2, <span class="nv">projid32bit</span><span class="o">=</span>1
+    <span class="o">=</span>                       <span class="nv">crc</span><span class="o">=</span>1        <span class="nv">finobt</span><span class="o">=</span>1, <span class="nv">sparse</span><span class="o">=</span>1, <span class="nv">rmapbt</span><span class="o">=</span>1
+    <span class="o">=</span>                       <span class="nv">reflink</span><span class="o">=</span>1    <span class="nv">bigtime</span><span class="o">=</span>1 <span class="nv">inobtcount</span><span class="o">=</span>1 <span class="nv">nrext64</span><span class="o">=</span>0
+    data     <span class="o">=</span>                       <span class="nv">bsize</span><span class="o">=</span>4096   <span class="nv">blocks</span><span class="o">=</span>52428800, <span class="nv">imaxpct</span><span class="o">=</span>25
+    <span class="o">=</span>                       <span class="nv">sunit</span><span class="o">=</span>0      <span class="nv">swidth</span><span class="o">=</span>0 blks
+    naming   <span class="o">=</span>version 2              <span class="nv">bsize</span><span class="o">=</span>4096   ascii-ci<span class="o">=</span>0, <span class="nv">ftype</span><span class="o">=</span>1
+    log      <span class="o">=</span>internal log           <span class="nv">bsize</span><span class="o">=</span>4096   <span class="nv">blocks</span><span class="o">=</span>25600, <span class="nv">version</span><span class="o">=</span>2
+    <span class="o">=</span>                       <span class="nv">sectsz</span><span class="o">=</span>512   <span class="nv">sunit</span><span class="o">=</span>0 blks, lazy-count<span class="o">=</span>1
+    realtime <span class="o">=</span>none                   <span class="nv">extsz</span><span class="o">=</span>4096   <span class="nv">blocks</span><span class="o">=</span>0, <span class="nv">rtextents</span><span class="o">=</span>0
+</code></pre></div></div>
+
+<h4 id="5-once-the-file-system-is-created-we-can-now-mount-to-folder-on-our-system-mine-is-mounting-to-storage">5. Once the file system is created we can now mount to folder on our system, mine is mounting to storage</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount /dev/ubuntu-vg/storage /storage
+lsblk <span class="nt">-f</span>
+    NAME                      FSTYPE      FSVER    LABEL UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+    sda
+    ├─sda1
+    ├─sda2                    xfs                        591e7b70-727d-44c5-8cb2-cbc452531e60      1.8G     8% /boot
+    └─sda3                    LVM2_member LVM2 001       vVWOzE-NGJ8-R2b6-dteC-2Xwo-HQMc-zJQpv4
+    ├─ubuntu--vg-ubuntu--lv xfs                        55fa1bbe-29e0-482c-9d59-8bcd6b4c22b6     92.2G     8% /
+    └─ubuntu--vg-storage    xfs
+</code></pre></div></div>
+
+<h4 id="6-we-can-now-mount-this-permanently-in-fstab-etcfstab">6. We can now mount this permanently in fstab /etc/fstab</h4>
+
+<p class="note" title="Best Practice">It’s a general best practice to mount using UUID as it never changes compared to device names.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "/etc/fstab"</span>
+<span class="c"># Add entry:</span>
+/dev/disk/by-uuid/6838af0e-731b-4431-a72d-08c104781bef /storage xfs defaults 0 0
+</code></pre></div></div>
+
+<p class="faded">For UUID of your disk, this can be obtained by running <code class="language-plaintext highlighter-rouge">blkid</code> command on your system to print block ids for your devices. Save the entries and run below command and resolve any errors.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mount <span class="nt">-a</span>
+</code></pre></div></div>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[This post covers a basic walkthrough on steps to take create a logical volume]]></summary></entry><entry><title type="html">Why DRS/MGN agent failed to install due to “No space left on device” but the volume has sufficient disk space.</title><link href="/blog/posts/2024-04-20-no-space-left-on-devide/" rel="alternate" type="text/html" title="Why DRS/MGN agent failed to install due to “No space left on device” but the volume has sufficient disk space." /><published>2024-04-20T00:00:00+00:00</published><updated>2026-04-07T19:31:12+00:00</updated><id>/blog/posts/no-space-left-on-devide</id><content type="html" xml:base="/blog/posts/2024-04-20-no-space-left-on-devide/"><![CDATA[<ol id="markdown-toc">
+  <li><a href="#problem-statement" id="markdown-toc-problem-statement">Problem Statement</a></li>
+  <li><a href="#troubleshooting" id="markdown-toc-troubleshooting">Troubleshooting</a></li>
+</ol>
+
+<h2 id="problem-statement">Problem Statement</h2>
+
+<p>During installation you will see standard failure when executing agent installation:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Downloading the AWS Replication Agent onto the <span class="nb">source </span>server...
+
+Error: Failed Downloading the AWS Replication Agent
+Installation failed.
+Learn more about installation issues <span class="k">in </span>our documentation at https://docs.aws.amazon.com/drs/latest/userguide/Troubleshooting-Agent-Issues.html
+</code></pre></div></div>
+
+<p>You can review install logs for context on failure, by default the installation log is saved in the install directory</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo cat </span>aws_replication_agent_installer.log <span class="o">[</span>Truncated]
+
+Error: Failed Downloading the AWS Replication Agent
+Installation failed.
+Learn more about installation issues <span class="k">in </span>our documentation at https://docs.aws.amazon.com/drs/latest/userguide/Troubleshooting-Agent-Issues.html  <span class="o">[</span>installation_id: 4495e699-4c21-4eee-bac6-c1f6b79ee6db, agent_version: 5.19.0.2023.352.1140, aws_instance_id: i-08907809e46fda714, mac_addresses: 16445040878151, _origin_client_type: installer]
+2024-01-13 14:02:22,825 ERROR      Installation was not finished successfully
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">"dirrus/installer_shared/installer_main.py"</span>, line 451, <span class="k">in </span>download_installer_files
+  File <span class="s2">"shared/installer_utils/file_utils.py"</span>, line 23, <span class="k">in </span>save_files
+OSError: <span class="o">[</span>Errno 28] No space left on device
+</code></pre></div></div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Based on the error we confirm the available disk space</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">df</span> <span class="nt">-hT</span>
+
+Filesystem     Type      Size  Used Avail Use% Mounted on
+devtmpfs       devtmpfs  4.0M     0  4.0M   0% /dev
+tmpfs          tmpfs     979M     0  979M   0% /dev/shm
+tmpfs          tmpfs     392M  5.4M  386M   2% /run
+/dev/xvda1     xfs       8.0G  1.6G  6.5G  20% /
+tmpfs          tmpfs     300M     0  300M   0% /tmp
+/dev/xvda128   vfat       10M  1.3M  8.7M  13% /boot/efi
+tmpfs          tmpfs     196M     0  196M   0% /run/user/1000
+</code></pre></div></div>
+
+<p>From the output we can see that our root directory / is 20% utilized with sufficient space to accommodate the agent. However our /tmp directory is mounted on tmpfs and currently does not have sufficient space to accommodate agent based on documentation [1] the DRS agent requires at-least 500MB to install successfully. tmpfs is a temporary filesystem that resides in memory and/or swap partition(s). By default, a tmpfs partition has its maximum size set to half of the available RAM on the system, however it is possible to overrule this value.</p>
+
+<p>Therefore the resolve the issue you can proceed with the following steps:</p>
+
+<ol>
+  <li>Temporary override the default value you can proceed with the following command to accommodate the agent
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mount <span class="nt">-o</span> remount,size<span class="o">=</span>1G /tmp
+</code></pre></div>    </div>
+  </li>
+  <li>To permanently override this value you can add below entry in /etc/fstab based on desired size
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmpfs   /tmp         tmpfs   rw,nodev,nosuid,size<span class="o">=</span>1G          0  0
+</code></pre></div>    </div>
+  </li>
+  <li>Depending on whether this is production or testing EC2 instance customer can increase their instance size which in turn allow more memory assignment to tmpfs</li>
+</ol>
+
+<p>After performing method:1 we now see that our tmpfs directory is 1GB</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">df</span> <span class="nt">-hT</span>
+Filesystem     Type      Size  Used Avail Use% Mounted on
+devtmpfs       devtmpfs  4.0M     0  4.0M   0% /dev
+tmpfs          tmpfs     979M     0  979M   0% /dev/shm
+tmpfs          tmpfs     392M  5.4M  386M   2% /run
+/dev/xvda1     xfs       8.0G  1.6G  6.5G  20% /
+tmpfs          tmpfs     1.0G     0  1.0G   0% /tmp
+/dev/xvda128   vfat       10M  1.3M  8.7M  13% /boot/efi
+tmpfs          tmpfs     196M     0  196M   0% /run/user/1000
+</code></pre></div></div>
+<p>We now have a successful agent installation</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Source Network already exists <span class="k">for </span>vpc: vpc-0e74d42255ebfc9d9.
+The following is the <span class="nb">source </span>server ID: s-341d64cdb11d39ef2.
+The AWS Replication Agent was successfully installed.
+</code></pre></div></div>
+
+<p>[1] <a href="https://docs.aws.amazon.com/drs/latest/userguide/installation-requirements.html">Installation requirements for AWS Replication Agent</a>
+[2] <a href="https://wiki.archlinux.org/title/Tmpfs">tmpfs</a></p>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[This article covers a recent issue I encountered whilst assisting customer with troubleshooting “No space left on device” error on AL2023 when sufficient disk space was available.]]></summary></entry><entry><title type="html">Why is my DRS Drill/Recovery Instance launching in default VPC?</title><link href="/blog/posts/2023-04-16-DR-drill-default-vpc/" rel="alternate" type="text/html" title="Why is my DRS Drill/Recovery Instance launching in default VPC?" /><published>2023-04-16T00:00:00+00:00</published><updated>2026-04-06T18:14:31+00:00</updated><id>/blog/posts/DR-drill-default-vpc</id><content type="html" xml:base="/blog/posts/2023-04-16-DR-drill-default-vpc/"><![CDATA[<p class="lead">I have come across a few cases where customers launch recovery instances and need further guidance on understanding the following.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#the-problem" id="markdown-toc-the-problem">The Problem</a></li>
+  <li><a href="#locating-the-launch-template" id="markdown-toc-locating-the-launch-template">Locating the Launch Template</a></li>
+  <li><a href="#why-this-happens" id="markdown-toc-why-this-happens">Why This Happens</a></li>
+  <li><a href="#the-fix" id="markdown-toc-the-fix">The Fix</a></li>
+</ol>
+
+<h2 id="the-problem">The Problem</h2>
+
+<ul>
+  <li>Why is it launching in default VPC</li>
+  <li>Why is it failing to launch due to no default VPC or subnet specified (VPCIdNotSpecified)</li>
+</ul>
+
+<p class="note" title="Important">DRS uses EC2 launch templates to launch drill and recovery EC2 instances, these launch templates are created automatically with default settings to launching drill/recovery instances. These are created upon installation of the AWS replication agent.</p>
+
+<h2 id="locating-the-launch-template">Locating the Launch Template</h2>
+
+<p>Generally the launch templates are available on EC2 dashboard. For ease of use we can access the launch templates directly from DRS console by selecting source –&gt; Launch Settings –&gt; Launch Template.</p>
+
+<p><img src="/assets/img/blog/DRSdrill/1.png" alt="DRS console launch template navigation" /></p>
+
+<p class="figcaption">DRS console path to launch template settings.</p>
+
+<p>By default the subnet is configured to “Don’t include in launch template”.</p>
+
+<p><img src="/assets/img/blog/DRSdrill/2.png" alt="Default subnet configuration" /></p>
+
+<p class="figcaption">Default launch template subnet setting.</p>
+
+<h2 id="why-this-happens">Why This Happens</h2>
+
+<p>The above configuration will be why customer drill/recovery instance launches:</p>
+
+<ul>
+  <li>In default VPC, if one exists</li>
+  <li>Fail to launch with “An error occurred (VPCIdNotSpecified) when calling the RunInstances operation: No default VPC for this user” should default VPC not exist.</li>
+</ul>
+
+<p><img src="/assets/img/blog/DRSdrill/3.png" alt="VPCIdNotSpecified error" /></p>
+
+<p class="figcaption">VPCIdNotSpecified error when no default VPC exists.</p>
+
+<p class="faded">From the documentation:</p>
+
+<p class="note" title="Documentation">Customers that do not have a default VPC must modify the EC2 Launch Template and explicitly define the subnet in which to launch. Failure to do so will result in errors when launching Drill or Recovery instances.</p>
+
+<p class="note">Subnet - Choose the subnet. This is the subnet within which the network interface is located and the Drill or Recovery instance will be launched. Elastic Disaster Recovery selects the default VPC subnet by default (if one exists).</p>
+
+<h2 id="the-fix">The Fix</h2>
+
+<p>To workaround/fix the issue we can modify the Launch Template and specify subnet.</p>
+
+<p><img src="/assets/img/blog/DRSdrill/4.png" alt="Modify launch template" /></p>
+
+<p class="figcaption">Modifying the launch template to specify a subnet.</p>
+
+<p>These settings can be found under the “Network Settings”.</p>
+
+<p><img src="/assets/img/blog/DRSdrill/5.png" alt="Network settings" /></p>
+
+<p class="figcaption">Network settings section in the launch template.</p>
+
+<blockquote class="lead">
+  <p>If a customer does not explicitly set the subnet in the EC2 Launch template this will result in drill/recovery instances launching in default VPC or fail with error if non-exists.</p>
+</blockquote>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[Understanding why DRS drill and recovery instances launch in the default VPC and how to resolve VPCIdNotSpecified errors.]]></summary></entry><entry><title type="html">Create CloudWatch Alarms for Multiple EC2 Instances &amp;amp; EBS Volumes [Script]</title><link href="/blog/posts/2023-03-30-cloudwatch-alarms/" rel="alternate" type="text/html" title="Create CloudWatch Alarms for Multiple EC2 Instances &amp;amp; EBS Volumes [Script]" /><published>2023-03-30T00:00:00+00:00</published><updated>2026-07-01T12:59:04+00:00</updated><id>/blog/posts/cloudwatch-alarms</id><content type="html" xml:base="/blog/posts/2023-03-30-cloudwatch-alarms/"><![CDATA[<p class="lead">I come across a few cases whereby customers are looking for a simplified approach to create cloudwatch alarms for more than 1 resource (e.g I have 30 instances how can I create an alarm for all of them). The below are actually 1 script but can be modified to serve different resources (EBS or EC2) additionally these can serve different metrics below are just examples but you can edit parameters of the put-metric-alarm cli to your use case.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#ebs-alarms" id="markdown-toc-ebs-alarms">EBS Alarms</a></li>
+  <li><a href="#demo" id="markdown-toc-demo">Demo</a>    <ol>
+      <li><a href="#ec2-alarms" id="markdown-toc-ec2-alarms">EC2 Alarms</a></li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="ebs-alarms">EBS Alarms</h2>
+
+<p>The example script below creates a throughput alarm for all volumes in af-south-1 region</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nv">listVolumes</span><span class="o">=</span><span class="s1">'/tmp/listvolumes.txt'</span>
+<span class="nv">volumes</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-volumes <span class="nt">--query</span> <span class="s2">"Volumes[*].[VolumeId]"</span> <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>tag:Environment,Values<span class="o">=</span>Test <span class="nt">--output</span> text <span class="nt">--region</span> af-south-1<span class="si">)</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">volumes</span><span class="k">}</span> <span class="o">&gt;</span> <span class="k">${</span><span class="nv">listVolumes</span><span class="k">}</span>
+<span class="k">for </span>Volumes <span class="k">in</span> <span class="sb">`</span><span class="nb">cat</span> <span class="k">${</span><span class="nv">listVolumes</span><span class="k">}</span><span class="sb">`</span>
+<span class="k">do    
+        </span><span class="nb">echo</span> <span class="nv">$Volumes</span>    
+        aws cloudwatch put-metric-alarm <span class="se">\ </span>   
+        <span class="nt">--alarm-name</span> <span class="k">${</span><span class="nv">Volumes</span><span class="k">}</span> <span class="se">\ </span>   
+        <span class="nt">--alarm-description</span> <span class="s2">"Alarm when EBS volume exceeds 100MB throughput"</span> <span class="se">\ </span>   
+        <span class="nt">--metric-name</span> VolumeReadBytes <span class="se">\ </span>   
+        <span class="nt">--namespace</span> AWS/EBS <span class="se">\ </span>   
+        <span class="nt">--statistic</span> Average <span class="se">\ </span>   
+        <span class="nt">--period</span> 300 <span class="se">\ </span>   
+        <span class="nt">--threshold</span> 100000000 <span class="se">\ </span>   
+        <span class="nt">--comparison-operator</span> GreaterThanThreshold <span class="se">\ </span>   
+        <span class="nt">--dimensions</span> <span class="nv">Name</span><span class="o">=</span>VolumeId,<span class="s2">"Value=</span><span class="k">${</span><span class="nv">Volumes</span><span class="k">}</span><span class="s2">"</span> <span class="se">\ </span>   
+        <span class="nt">--evaluation-periods</span> 3 <span class="se">\ </span>   
+        <span class="nt">--alarm-actions</span> arn:aws:sns:af-south-1:[Account ID]:my-alarm-topic
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p class="note">This is a helpful note or context the reader should be aware of.</p>
+
+<h1 id="demo">Demo</h1>
+<p>Before running the script we have no alarms, view our list of volumes</p>
+
+<p><img src="/assets/img/blog/cloudwatch_alarms/1.png" alt="Alt text for the image" /></p>
+
+<p>We can also confirm that currently there is no Cloudwatch alarms</p>
+
+<p><img src="/assets/img/blog/cloudwatch_alarms/2.png" alt="Alt text for the image" /></p>
+
+<p>Executing the script from terminal, outputs will list all volumes</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./VolumeAlarm.sh
+
+vol-085e6db382ac333f8
+vol-00d93bdc2097ae508
+vol-080d7fe782bb3c5bf
+vol-00d406d7778f3bc03
+vol-0f9aa70d30ca661c7
+</code></pre></div></div>
+
+<p>Cloudwatch Alarm Dashboard
+<img src="/assets/img/blog/cloudwatch_alarms/3.png" alt="Alt text for the image" /></p>
+
+<p>We can now confirm our alarm by selecting any of the listed volumes
+<img src="/assets/img/blog/cloudwatch_alarms/4.png" alt="Alt text for the image" /></p>
+
+<h2 id="ec2-alarms">EC2 Alarms</h2>
+
+<p>The example script below creates a CPUutilization alarm that alarms when CPU reaches 70% [Can be filtered based on preferences]</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nv">listInstances</span><span class="o">=</span><span class="s1">'/tmp/Instances.txt'</span>
+<span class="nv">instances</span><span class="o">=</span><span class="si">$(</span>aws ec2 describe-instances <span class="nt">--region</span> eu-west-2 <span class="nt">--query</span> <span class="s2">"Reservations[*].Instances[*].[InstanceId]"</span> <span class="nt">--filters</span> <span class="nv">Name</span><span class="o">=</span>instance-state-name,Values<span class="o">=</span>running <span class="nt">--output</span> text<span class="si">)</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">instances</span><span class="k">}</span> <span class="o">&gt;</span> <span class="k">${</span><span class="nv">listInstances</span><span class="k">}</span>
+<span class="k">for </span>Instance <span class="k">in</span> <span class="sb">`</span><span class="nb">cat</span> <span class="k">${</span><span class="nv">listInstances</span><span class="k">}</span><span class="sb">`</span>
+<span class="k">do
+	 </span><span class="nb">echo</span> <span class="nv">$Instance</span>
+	 aws cloudwatch put-metric-alarm <span class="se">\</span>
+        <span class="nt">--region</span> eu-west-2<span class="se">\</span>
+        <span class="nt">--alarm-name</span> status-check-<span class="k">${</span><span class="nv">Instance</span><span class="k">}</span> <span class="se">\</span>
+        <span class="nt">--alarm-description</span> <span class="s2">"Alarm when instance experience status check fail"</span> <span class="se">\</span>
+        <span class="nt">--metric-name</span> <span class="s2">"StatusCheckFailed_Instance"</span> <span class="se">\</span>
+        <span class="nt">--namespace</span> <span class="s2">"AWS/EC2"</span> <span class="se">\</span>
+        <span class="nt">--statistic</span> <span class="s2">"Sum"</span> <span class="se">\</span>
+        <span class="nt">--period</span> 300 <span class="se">\</span>
+        <span class="nt">--threshold</span> 0 <span class="se">\</span>
+        <span class="nt">--comparison-operator</span> <span class="s2">"GreaterThanThreshold"</span>  <span class="se">\</span>
+        <span class="nt">--dimensions</span> <span class="s2">"Name=InstanceId"</span>,<span class="s2">"Value=</span><span class="k">${</span><span class="nv">Instance</span><span class="k">}</span><span class="s2">"</span> <span class="se">\</span>
+        <span class="nt">--evaluation-periods</span> 1 <span class="se">\</span>
+        <span class="nt">--alarm-actions</span> <span class="s2">"arn:aws:sns:eu-west-2:[Account ID]:StatusCheckFailed"</span> <span class="se">\</span>
+        <span class="nt">--unit</span> Count
+<span class="k">done</span>
+</code></pre></div></div>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[This article shares some scripts to simplify the creation cloudwatch alarms for multiple EC2 instances and EBS volumes.]]></summary></entry><entry><title type="html">Connecting Ansible over AWS Session Manager</title><link href="/blog/posts/2023-03-15-ansible-session-manager/" rel="alternate" type="text/html" title="Connecting Ansible over AWS Session Manager" /><published>2023-03-15T00:00:00+00:00</published><updated>2026-04-06T18:14:31+00:00</updated><id>/blog/posts/ansible-session-manager</id><content type="html" xml:base="/blog/posts/2023-03-15-ansible-session-manager/"><![CDATA[<p class="lead">This article aims to explain, how to configure ansible to connect over SSM session manager connection and execute playbooks.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#1-install-aws-collections-using-ansible-galaxy" id="markdown-toc-1-install-aws-collections-using-ansible-galaxy">1. Install aws collections using ansible-galaxy</a></li>
+  <li><a href="#2-enable-the-plugin-in-ansiblecfg" id="markdown-toc-2-enable-the-plugin-in-ansiblecfg">2. Enable the plugin in ansible.cfg</a></li>
+  <li><a href="#3-create-inventory-file" id="markdown-toc-3-create-inventory-file">3. Create inventory file</a></li>
+  <li><a href="#4-create-and-execute-a-playbook" id="markdown-toc-4-create-and-execute-a-playbook">4. Create and execute a playbook</a></li>
+  <li><a href="#troubleshooting" id="markdown-toc-troubleshooting">Troubleshooting</a>    <ol>
+      <li><a href="#sample-log-output-from-cloudwatch-logs" id="markdown-toc-sample-log-output-from-cloudwatch-logs">Sample log output from cloudwatch logs:</a></li>
+    </ol>
+  </li>
+</ol>
+
+<p>The purpose of this article is to explain how to execute Ansible playbooks on EC2 instances over SSM Session Manager connection. To achieve this use-case we make use of Ansible Collections, these are a distribution format for Ansible content that can include playbooks, roles, modules, and plugins. For this exercise we will make use of the following plugins:</p>
+
+<p><a href="https://docs.ansible.com/projects/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html">amazon.aws.aws_ec2</a> - Get inventory hosts from EC2<br />
+<a href="https://docs.ansible.com/projects/ansible/latest/collections/community/aws/aws_ssm_connection.html#ansible-collections-community-aws-aws-ssm-connection">community.aws.aws_ssm</a> - This connection plugin allows Ansible to execute tasks on an EC2 instance via the aws ssm CLI</p>
+
+<p>The above plugins form part of the amazon.aws (maintained by the Ansible cloud team) and community.aws (maintained by the Ansible community) collections. These modules and plugins offer a variety of Ansible content to help automate the management of AWS resources.</p>
+
+<p class="note" title="Disclaimer">These are third-party plugins and customers can reach out to vendor and/or community for support issues pertaining these plugins. We can however assist with SSM connection issues and session manager plugin. For everything else, best efforts.</p>
+
+<p>Okay! Let’s put the lab together by preparing our instances.</p>
+
+<p>Controller Instance:<br />
+<a href="https://docs.ansible.com/projects/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible">Ansible</a><br />
+<a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/manually-install-ssm-agent-linux.html">SSM Agent</a><br />
+<a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">Session manager plugin</a><br />
+<a href="https://docs.python-guide.org/starting/install3/linux/">python &gt;= 3.6</a><br />
+<a href="https://docs.aws.amazon.com/boto3/latest/guide/quickstart.html">boto3 &gt;= 1.16.0</a><br />
+<a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">awscli (optional)</a></p>
+
+<p>Target Instance (s)
+SSM Agent
+<a href="https://www.tecmint.com/install-curl-in-linux/">curl installed</a></p>
+
+<p>Once we’ve prepped our environment, our next steps will be to configure our inventory using the amazon.aws.aws_ec2</p>
+
+<h4 id="1-install-aws-collections-using-ansible-galaxy">1. Install aws collections using ansible-galaxy</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-galaxy collection <span class="nb">install </span>community.aws
+</code></pre></div></div>
+
+<p class="note">When you install the community.aws collection it will automatically install the amazon.aws collection.</p>
+
+<h4 id="2-enable-the-plugin-in-ansiblecfg">2. Enable the plugin in ansible.cfg</h4>
+
+<p>This can be done on global config /etc/ansible/ansible.cfg, for this exercise we will create a local cfg file.</p>
+
+<p>First we create a project folder and cd into that folder:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>project1
+<span class="nb">cd </span>project1
+</code></pre></div></div>
+
+<p>Generate ansible.cfg file:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-config init <span class="nt">--disabled</span> <span class="o">&gt;</span> ansible.cfg
+</code></pre></div></div>
+
+<p>Using your favorite text editor, edit ansible.cfg » find entry: [inventory] and enable EC2 plugin, similar to below:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "ansible.cfg"
+</span><span class="nn">[inventory]</span> <span class="py">enable_plugins</span> <span class="p">=</span> <span class="s">amazon.aws.aws_ec2</span>
+</code></pre></div></div>
+
+<p>Once the above is complete, you should now have a ansible.cfg file with plugin enabled for local testing. Next steps will be to create inventory.</p>
+
+<h4 id="3-create-inventory-file">3. Create inventory file</h4>
+
+<table class="note">
+  <tbody>
+    <tr>
+      <td>To create inventory file, we create aws_ec2.yml in our project directory (Use a YAML configuration file that ends with aws_ec2.{yml</td>
+      <td>yaml}).</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi aws_ec2.yml
+</code></pre></div></div>
+
+<p>Here we specify our ec2_inventory plugin and set some parameters, can reference <a href="https://docs.ansible.com/projects/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html">docs</a> for parameter options.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file: "aws_ec2.yml"</span>
+<span class="c1">##Inventory</span>
+<span class="na">plugin</span><span class="pi">:</span> <span class="s">amazon.aws.aws_ec2</span>
+<span class="na">regions</span><span class="pi">:</span>
+ <span class="pi">-</span> <span class="s2">"</span><span class="s">us-east-1"</span>
+<span class="na">filters</span><span class="pi">:</span>
+ <span class="na">instance-state-name </span><span class="pi">:</span> <span class="s">running</span>
+<span class="na">hostnames</span><span class="pi">:</span>
+ <span class="pi">-</span> <span class="s">instance-id</span>
+<span class="na">compose</span><span class="pi">:</span>
+  <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">instance-id</span>
+</code></pre></div></div>
+
+<p>Now that we have our inventory file, let’s do a test run by performing a list operation:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"all"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"children"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"aws_ec2"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ungrouped"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"aws_ec2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"hosts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"i-04dc05dca9b5ede89"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"i-0e6ee2fa57c6d1b46"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="figcaption">Inventory test output showing 2 discovered instances.</p>
+
+<p>As we can see from the truncated output, ec2-inventory returned 2 instances (Controller and target) now that we confirmed that this works, lets execute a playbook.</p>
+
+<h4 id="4-create-and-execute-a-playbook">4. Create and execute a playbook</h4>
+
+<p>Using your text editor of choice, let’s create a playbook to install nginx. You can reference <a href="https://docs.ansible.com/projects/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html">docs</a> for variable options and for example playbooks for both windows and linux.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file: "test.yml"</span>
+<span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install a Nginx Package on Linux Instance</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">ansible_connection</span><span class="pi">:</span> <span class="s">community.aws.aws_ssm</span>
+    <span class="na">ansible_aws_ssm_region</span><span class="pi">:</span> <span class="s">us-east-1</span>
+    <span class="na">ansible_aws_ssm_bucket_name</span><span class="pi">:</span> <span class="s">testing-inspector-policy</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install a Nginx Package</span>
+      <span class="na">yum</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+</code></pre></div></div>
+
+<p class="faded">Using the –limit option will exclude controller from play.</p>
+
+<p>To confirm if the nginx was installed on instance, we can connect via session manager and check if the service is present (inactive):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ssm start-session <span class="nt">--target</span> i-0e6ee2fa57c6d1b46
+Starting session with SessionId: testbench_DRS-024b6e23d7767846e
+
+sh-4.4<span class="nv">$ </span><span class="nb">sudo </span>systemctl status nginx
+● nginx.service - The nginx HTTP and reverse proxy server
+   Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/nginx.service<span class="p">;</span> disabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+   Active: inactive <span class="o">(</span>dead<span class="o">)</span>
+</code></pre></div></div>
+
+<p class="figcaption">As expected service is installed but not running due to “present” flag.</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p class="note" title="Reminder">Before working with customer to address issues set the correct expectations regarding support for third-party tools/applications.</p>
+
+<p>Ansible will establish connection to ec2 instance via Session Manager, we start by verifying if we can connect to the instance using session manager without all the bells and whistles:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ssm start-session <span class="nt">--target</span> i-023500a698884d434
+Starting session with SessionId: lunding_awscli-0ef41eeb1b8cc2296
+sh-4.4<span class="err">$</span>
+</code></pre></div></div>
+
+<p>Confirm that session starts without error and run a few commands and confirm that there is no issue with session duration. If you happen to run into any errors you can always review the following documentation for troubleshooting.</p>
+
+<p class="note">If you able to connect to the instance with session manager from terminal, we can rule out SSM. Troubleshooting beyond this point will be on best efforts.</p>
+
+<p>Check for any syntax errors in the following files [ansible.cfg, playbook, inventory, etc]</p>
+
+<p>If the above checkouts, rerun the play using -v, –vv or –vvv depending on the level of verbosity to catch any errors from an ansible perspective.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-playbook <span class="nt">-i</span> aws_ec2.yml test.yml <span class="nt">-vvv</span> <span class="nt">--limit</span> <span class="s1">'!i-0b52f059504ba450e'</span>
+</code></pre></div></div>
+
+<p class="figcaption">The verbose output provides detailed information about each step of the playbook execution including connection establishment, module execution, and task results. Review the EXEC commands for an overview of commands executed on the instance.</p>
+
+<ul>
+  <li>The outputs of the commands can also be reviewed via cloudwatch logs, for more information about saving session data and other session manager preferences you can review this <a href="">article</a></li>
+</ul>
+
+<h3 id="sample-log-output-from-cloudwatch-logs">Sample log output from cloudwatch logs:</h3>
+
+<p><img src="/assets/img/blog/ansible/1.png" alt="Alt text for the image" /></p>
+
+<p class="figcaption">CloudWatch log output showing session activity.</p>
+
+<p>Should you get any errors on logs you can assist with best efforts, alternatively customers can open an issue amazon.aws or community.aws depending on the issue experienced. Once connection is confirmed to be working from a Session Manager perspective all should be good from an SSM perspective, Alternatively customers can use RunCommand to execute ansible playbooks.</p>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[How to configure Ansible to connect over AWS Session Manager]]></summary></entry><entry><title type="html">First steps to building a successful career in I.T</title><link href="/blog/posts/2020-12-10-first-steps/" rel="alternate" type="text/html" title="First steps to building a successful career in I.T" /><published>2020-12-10T00:00:00+00:00</published><updated>2026-04-06T18:14:31+00:00</updated><id>/blog/posts/first-steps</id><content type="html" xml:base="/blog/posts/2020-12-10-first-steps/"><![CDATA[<p class="lead">From personal experience, I found that many individuals will opt to study I.T/ICT-related studies with no real context as to what is required to build a successful career within the information technology domain. I have decided to draft this useful guide on how to master the concepts, demonstrate practical skill, get hired, and excel in your chosen field of specialization.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#1-the-road-map" id="markdown-toc-1-the-road-map">1. The Road Map</a></li>
+  <li><a href="#2-master-the-basics" id="markdown-toc-2-master-the-basics">2. Master the basics</a></li>
+  <li><a href="#3-the-practice-lab" id="markdown-toc-3-the-practice-lab">3. The Practice Lab</a></li>
+</ol>
+
+<h4 id="1-the-road-map">1. The Road Map</h4>
+
+<p>I know how daunting and/or tempting it is to just dive into the typical I.T course that covers various aspects of the field. I made this mistake in 2013 where I opted for the general course as opposed to linking my career goals to what I needed to learn. Hence the roadmap, I.T is a vast field with various outcomes some courses complement each other for example if I were to be opting for an entry-level post I would look at the combination of the following CompTIA Certs (ITF (Fundamentals), A+ (Technician), N+ (Networking)) these are the basics and should enable you for entry-level positions or in our lingo Tier 1. It’s best to first get your foot in the door and then opt for further studies and/or specialization knowing that you have fundamental certs along with work experience. Further to this, you could look at adding Security+ and/or Linux+ to boost your points with the prospective employer. https://www.comptia.org/home offers 2 paths infrastructure &amp; security, vendor-specific courses can be addressed once you’ve settled in your role.</p>
+
+<p class="note" title="Tip">Link your career goals to what you need to learn. Don’t just dive into a general I.T course.</p>
+
+<h4 id="2-master-the-basics">2. Master the basics</h4>
+
+<p>Nowadays anyone can learn anything via the internet which is great however bear in mind that most of these sources barely cover foundational knowledge. No matter your level of expertise a quick and regular revision of the fundamentals will help you break down the most complex of scenarios. Elon Musk beautifully places the latter approach in context by looking at First principles thinking. This link should help with the understanding thereof: https://jamesclear.com/first-principles. I found that the geek’s lesson &amp; other channels like freecodecamp.org are a great way to revise foundational knowledge on various concepts/topics within I.T, I have included the link just in case you feeling a bit tempted to dive right in. https://www.youtube.com/c/GeeksLesson/videos?view=0…</p>
+
+<blockquote class="lead">
+  <p>No matter your level of expertise a quick and regular revision of the fundamentals will help you break down the most complex of scenarios.</p>
+</blockquote>
+
+<h4 id="3-the-practice-lab">3. The Practice Lab</h4>
+
+<p>Remember certifications might be enough to get you to the interview stage but a mastered and refined skillset will ultimately open employment opportunities. Taking the time and care to build a home lab may help you refine your networking, troubleshooting, administration, and/or OS knowledge skills. This will count in your favor once you in the field, mastering the methodology along with the ability to go HAM practically might make you a real asset for not only your employer but for yourself as well. Many tools might help you with this journey such as virtual machines, online practice labs, or recycling old hardware for your network. It need not be expensive but if it is functioning well you cannot go wrong, Side note my first home lab was built on a virtualized environment using VirtualBox with 1 server and 2 windows clients to practically implement Active Directory and master GPO concepts. Creating snapshots will help in the long run for the break &amp; fix situations.</p>
+
+<p class="note" title="Remember">Certifications get you to the interview, but a mastered skillset opens the door.</p>
+
+<p>This guide from I.T Career questions should help you on your quest https://www.youtube.com/watch?v=4O_MxTPmah4</p>]]></content><author><name>Lundi Ngantweni</name><email>lundingantweni@gmail.com</email></author><category term="posts" /><summary type="html"><![CDATA[A guide on how to master the concepts, demonstrate practical skill, get hired, and excel in your chosen field of specialization.]]></summary></entry></feed>

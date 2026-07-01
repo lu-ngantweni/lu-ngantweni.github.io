@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+
+
+<head>
+  
+
+
+
+
+  <meta name="robots" content="noindex">
+
+
+
+  
+    
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Working with Docker | Lundi Ngantweni</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Working with Docker" />
+<meta name="author" content="Lundi Ngantweni" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="This page covers the basics of working with docker and available tools" />
+<meta property="og:description" content="This page covers the basics of working with docker and available tools" />
+<meta property="og:site_name" content="Lundi Ngantweni" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Working with Docker" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Lundi Ngantweni"},"dateModified":"2026-06-28T16:09:50+00:00","description":"This page covers the basics of working with docker and available tools","headline":"Working with Docker","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/logo.svg"},"name":"Lundi Ngantweni"},"url":"/docs/Containers/Docker/basics/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  
+    <meta name="keywords" content="cloud,aws,linux,devops,infrastructure,automation,systems-engineering">
+  
+
+
+
+  <meta name="color-scheme" content="dark light">
+
+
+
+  <meta name="theme-color" content="rgb(13,17,23)">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lundi Ngantweni">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="application-name" content="Lundi Ngantweni">
+
+<meta name="generator" content="Hydejack v9.2.1" />
+
+
+<link rel="alternate" href="/docs/Containers/Docker/basics/" hreflang="en">
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Lundi Ngantweni" />
+
+
+<link rel="shortcut icon"    href="/assets/icons/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/icons/favicon.svg">
+
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+
+
+<link rel="preload" href="/assets/img/swipe.svg" as="image" id="_hrefSwipeSVG">
+
+<link rel="dns-prefetch" href="/assets/js/search-worker-9.2.1.js" as="worker" id="_hrefSearch">
+
+  
+  <link rel="dns-prefetch" href="/assets/bower_components/katex/dist/katex.min.css" id="_katexPreload">
+  <noscript><link rel="stylesheet" href="/assets/bower_components/katex/dist/katex.min.css"></noscript>
+
+
+
+
+
+<script>((r,a)=>{function d(e,t,n,o){e.addEventListener?e.addEventListener(t,n,o):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n}r.loadJS=function(e,t){var n=a.createElement("script"),e=(n.src=e,t&&d(n,"load",t,{once:!0}),a.scripts[0]);return e.parentNode.insertBefore(n,e),n},r._loaded=!1,r.loadJSDeferred=function(e,t){var n=a.createElement("script");function o(){r._loaded=!0,t&&d(n,"load",t,{once:!0});var e=a.scripts[0];e.parentNode.insertBefore(n,e)}return n.src=e,r._loaded?o():d(r,"load",o,{once:!0}),n},r.setRel=r.setRelStylesheet=function(e){d(a.getElementById(e),"load",function(){this.rel="stylesheet"},{once:!0})}})(window,document);
+!function(a){"use strict";var b=function(b,c,d){function e(a){return h.body?a():void setTimeout(function(){e(a)})}function f(){i.addEventListener&&i.removeEventListener("load",f),i.media=d||"all"}var g,h=a.document,i=h.createElement("link");if(c)g=c;else{var j=(h.body||h.getElementsByTagName("head")[0]).childNodes;g=j[j.length-1]}var k=h.styleSheets;i.rel="stylesheet",i.href=b,i.media="only x",e(function(){g.parentNode.insertBefore(i,c?g:g.nextSibling)});var l=function(a){for(var b=i.href,c=k.length;c--;)if(k[c].href===b)return a();setTimeout(function(){l(a)})};return i.addEventListener&&i.addEventListener("load",f),i.onloadcssdefined=l,l(f),i};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
+!function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);
+!function(w) {
+  w._baseURL = '/';
+  w._publicPath = '/assets/js/';
+  w._noPushState = false;
+  w._noDrawer = false;
+  w._noNavbar = false;
+  w._noToc = false;
+  w._noSearch = false;
+  w._advertise = false;
+  w._search = {
+    DATA_URL: '/assets/sitedata.json?no-cache',
+    STORAGE_KEY: 'mini-search/',
+    INDEX_KEY: 'index--2026-07-01T15:14:31+00:00',
+  };
+  w._clapButton = true;
+}(window);</script>
+
+
+
+<!--[if gt IE 8]><!---->
+
+  
+
+
+
+
+<link rel="stylesheet" href="/assets/css/hydejack-9.2.1.css" id="_stylePreload">
+<link rel="stylesheet" href="/assets/icomoon/style.css" id="_iconsPreload">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600%7CJetBrains+Mono:400,500&display=swap" id="_fontsPreload">
+
+
+
+  <style id="_pageStyle">
+
+html{--accent-color: rgb(88,166,255);--accent-color-faded: rgba(0, 200, 255, 0.5);--accent-color-highlight: rgba(0, 200, 255, 0.1);--accent-color-darkened: rgb(88,166,255);--theme-color: rgb(13,17,23);--dark-mode-body-bg: #0d1520;--dark-mode-border-color: #1e3a52}
+</style>
+
+
+<!--<![endif]-->
+
+
+<!-- Favicon (SVG) -->
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+
+<!-- Custom stylesheet -->
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+
+</head>
+
+<body class="no-break-layout">
+  
+<script>
+  window._sunrise = 6;
+  window._sunset =  18;
+  ((e,s)=>{var d="light-mode",a="dark-mode",o=(new Date).getHours();"matchMedia"in e&&e.matchMedia("(prefers-color-scheme)")||(e=(o=o<=e._sunrise||o>=e._sunset?a:d)==a?d:a,s.body.classList.add(o),s.body.classList.remove(e))})(window,document);
+
+</script>
+
+
+
+<hy-push-state
+  id="_pushState"
+  replace-selector="#_main"
+  link-selector="a[href]:not([href^='/assets/']):not(.external):not(.no-push-state)"
+  script-selector="script"
+  duration="500"
+  hashchange
+>
+  
+  
+  <div id="_navbar" class="navbar fixed-top">
+  <div class="content">
+    <span class="sr-only">Jump to:</span>
+    <div class="nav-btn-bar">
+      <a id="_menu" class="nav-btn no-hover" href="#_drawer--opened">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-menu"></span>
+      </a>
+      <div class="nav-span"></div>
+    </div>
+  </div>
+</div>
+<hr class="sr-only" hidden />
+
+  <main
+  id="_main"
+  class="content layout-page"
+  role="main"
+>
+  <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+    <li><a href="/">home</a></li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/">docs</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/Containers/">Containers</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/Containers/Docker/">Docker</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>basics</span>
+        
+      </li>
+    
+  
+</ul></nav>
+  <article class="page mb6" role="article">
+  <header>
+    <h1 class="page-title">Working with Docker</h1>
+    
+
+
+
+  
+    <div class="hr pb0"></div>
+  
+
+
+  </header>
+
+  <p>The aim of this article is to cover a basic session on how to work with docker, these are basic entry level tasks to help you get comfortable. However, I do encourage working and building different projects which will expose you to troubleshooting scenarios allowing you to learn more advanced concepts.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#prerequisites" id="markdown-toc-prerequisites">Prerequisites</a>    <ol>
+      <li><a href="#why-not-use-apt-install-dockerio" id="markdown-toc-why-not-use-apt-install-dockerio">Why Not Use apt install docker.io</a></li>
+    </ol>
+  </li>
+  <li><a href="#installation-steps" id="markdown-toc-installation-steps">Installation Steps</a>    <ol>
+      <li><a href="#step-1---add-dockers-official-gpg-key" id="markdown-toc-step-1---add-dockers-official-gpg-key">Step 1 - Add Docker’s official GPG key</a></li>
+      <li><a href="#step-2--add-the-docker-apt-repository" id="markdown-toc-step-2--add-the-docker-apt-repository">Step 2 — Add the Docker apt repository</a></li>
+      <li><a href="#step-3--install-docker-packages" id="markdown-toc-step-3--install-docker-packages">Step 3 — Install Docker packages</a></li>
+      <li><a href="#step-4--add-current-user-to-the-docker-group-and-verify-the-docker-installation" id="markdown-toc-step-4--add-current-user-to-the-docker-group-and-verify-the-docker-installation">Step 4 — Add current user to the docker group and Verify the Docker installation</a></li>
+    </ol>
+  </li>
+  <li><a href="#manage-container-lifecycle" id="markdown-toc-manage-container-lifecycle">Manage Container Lifecycle</a></li>
+  <li><a href="#manage-image-lifecyle" id="markdown-toc-manage-image-lifecyle">Manage Image Lifecyle</a></li>
+</ol>
+
+<hr />
+
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+  <li>A very very basic understanding of the Linux command line</li>
+  <li>Some knowledge of docker, here is a good <a href="https://www.youtube.com/watch?v=3c-iBn73dDE&amp;t=4989s">primer</a></li>
+</ul>
+
+<h4 id="why-not-use-apt-install-dockerio">Why Not Use apt install docker.io</h4>
+<p>Ubuntu’s default apt repositories include a package called docker.io. This should be avoided for production use because it is maintained by the Ubuntu team, not Docker, and is typically several major versions behind the official Docker release.</p>
+
+<p>The correct approach is to add Docker’s official repository and install from there. This gives you the latest stable release, the official CLI, BuildKit support, and the Compose plugin all of which are needed for running Supabase (I’m referencing Supabase here but this applies to any application, my current docker setup is built around Supabase).</p>
+
+<h2 id="installation-steps">Installation Steps</h2>
+
+<p class="note">As a disclaimer, alot of these commands and infromation are readily available on the docker official <a href="https://docs.docker.com/engine/install/ubuntu/">website</a>. My coverage is simply for my own notes and/or if you choose to follow this guide verbatim as most commands and outputs are pulled from my working system.</p>
+
+<h4 id="step-1---add-dockers-official-gpg-key">Step 1 - Add Docker’s official GPG key</h4>
+<p>This key is used to verify packages downloaded from Docker’s repository are authentic and have not been tampered with.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">install</span> <span class="nt">-m</span> 0755 <span class="nt">-d</span> /etc/apt/keyrings
+<span class="nb">sudo </span>curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg <span class="nt">-o</span> /etc/apt/keyrings/docker.asc
+<span class="nb">sudo chmod </span>a+r /etc/apt/keyrings/docker.asc
+</code></pre></div></div>
+<h4 id="step-2--add-the-docker-apt-repository">Step 2 — Add the Docker apt repository</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="se">\</span>
+  <span class="s2">"deb [arch=</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2"> signed-by=/etc/apt/keyrings/docker.asc] </span><span class="se">\</span><span class="s2">
+   https://download.docker.com/linux/ubuntu </span><span class="se">\</span><span class="s2">
+   </span><span class="si">$(</span><span class="nb">.</span> /etc/os-release <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"</span><span class="nv">$VERSION_CODENAME</span><span class="s2">"</span><span class="si">)</span><span class="s2"> stable"</span> | <span class="se">\</span>
+   <span class="nb">sudo tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
+</code></pre></div></div>
+
+<p class="note">The $(. /etc/os-release &amp;&amp; echo “$VERSION_CODENAME”) part automatically detects
+the Ubuntu release codename. On Ubuntu 24.04 this resolves to ‘noble’.
+This means the same command works across Ubuntu versions without modification.</p>
+
+<h4 id="step-3--install-docker-packages">Step 3 — Install Docker packages</h4>
+<p>Update apt to include the new Docker repository, then install all required Docker components:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+</code></pre></div></div>
+
+<p class="note"><code class="language-plaintext highlighter-rouge">docker-ce</code> Docker Engine — the core container runtime <br />
+  <code class="language-plaintext highlighter-rouge">docker-ce-cli</code> Docker CLI — the docker command <br />
+  <code class="language-plaintext highlighter-rouge">containerd.io</code> Container runtime used by Docker Engine <br />
+  <code class="language-plaintext highlighter-rouge">docker-buildx-plugin</code> Extended image build capabilities <br />
+  <code class="language-plaintext highlighter-rouge">docker-compose-plugin</code> Enables docker compose commands</p>
+
+<h4 id="step-4--add-current-user-to-the-docker-group-and-verify-the-docker-installation">Step 4 — Add current user to the docker group and Verify the Docker installation</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span>
+docker ps
+    CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+</code></pre></div></div>
+
+<p class="note">Adding yourself/current user to user group will address any permission errors. Basically the Docker daemon runs as root and exposes its API via a Unix socket at /var/run/docker.sock. By default only root and members of the docker group can read/write that socket. Adding yourself to the docker group grants that access permanently.</p>
+
+<h2 id="manage-container-lifecycle">Manage Container Lifecycle</h2>
+<p>Let’s start by creating a famous ‘hello-world’ container</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run hello-world
+    Unable to find image <span class="s1">'hello-world:latest'</span> locally
+    latest: Pulling from library/hello-world
+    17eec7bbc9d7: Pull <span class="nb">complete
+    </span>ea52d2000f90: Download <span class="nb">complete
+    </span>Digest: sha256:85404b3c53951c3ff5d40de0972b1bb21fafa2e8daa235355baf44f33db9dbdd
+    Status: Downloaded newer image <span class="k">for </span>hello-world:latest
+
+    Hello from Docker!
+    This message shows that your installation appears to be working correctly.
+
+    To generate this message, Docker took the following steps:
+    1. The Docker client contacted the Docker daemon.
+    2. The Docker daemon pulled the <span class="s2">"hello-world"</span> image from the Docker Hub.
+        <span class="o">(</span>amd64<span class="o">)</span>
+    3. The Docker daemon created a new container from that image which runs the
+        executable that produces the output you are currently reading.
+    4. The Docker daemon streamed that output to the Docker client, which sent it
+        to your terminal.
+
+    To try something more ambitious, you can run an Ubuntu container with:
+    <span class="nv">$ </span>docker run <span class="nt">-it</span> ubuntu bash
+
+    Share images, automate workflows, and more with a free Docker ID:
+    https://hub.docker.com/
+
+    For more examples and ideas, visit:
+    https://docs.docker.com/get-started/
+</code></pre></div></div>
+
+<p>You can use the docker ps command to check available containers, by default running the ps command without options will only list running containters. You can use the help docs to explore options</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps <span class="nt">--help</span>
+    Usage:  docker ps <span class="o">[</span>OPTIONS]
+
+    List containers
+
+    Aliases:
+    docker container <span class="nb">ls</span>, docker container list, docker container ps, docker ps
+
+    Options:
+    <span class="nt">-a</span>, <span class="nt">--all</span>             Show all containers <span class="o">(</span>default shows just running<span class="o">)</span>
+    <span class="nt">-f</span>, <span class="nt">--filter</span> filter   Filter output based on conditions provided
+        <span class="nt">--format</span> string   Format output using a custom template:
+                            <span class="s1">'table'</span>:            Print output <span class="k">in </span>table format with column headers <span class="o">(</span>default<span class="o">)</span>
+                            <span class="s1">'table TEMPLATE'</span>:   Print output <span class="k">in </span>table format using the given Go template
+                            <span class="s1">'json'</span>:             Print <span class="k">in </span>JSON format
+                            <span class="s1">'TEMPLATE'</span>:         Print output using the given Go template.
+                            Refer to https://docs.docker.com/go/formatting/ <span class="k">for </span>more information about formatting output with templates
+    <span class="nt">-n</span>, <span class="nt">--last</span> int        Show n last created containers <span class="o">(</span>includes all states<span class="o">)</span> <span class="o">(</span>default <span class="nt">-1</span><span class="o">)</span>
+    <span class="nt">-l</span>, <span class="nt">--latest</span>          Show the latest created container <span class="o">(</span>includes all states<span class="o">)</span>
+        <span class="nt">--no-trunc</span>        Don<span class="s1">'t truncate output
+    -q, --quiet           Only display container IDs
+    -s, --size            Display total file sizes
+</span></code></pre></div></div>
+<p>Passing the -a flag to see all a containers as ours is in exited status</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps <span class="nt">-a</span>
+    CONTAINER ID   IMAGE         COMMAND    CREATED         STATUS                     PORTS     NAMES
+    3d7993af6577   hello-world   <span class="s2">"/hello"</span>   5 minutes ago   Exited <span class="o">(</span>0<span class="o">)</span> 5 minutes ago             trusting_banach
+</code></pre></div></div>
+
+<p>If you check the output of our first docker run command, it gave us the idea to run an ubuntu container in interactive mode</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> ubuntu bash
+    Unable to find image <span class="s1">'ubuntu:latest'</span> locally
+    latest: Pulling from library/ubuntu
+    817807f3c64e: Pull <span class="nb">complete
+    </span>e4a1e8de092c: Download <span class="nb">complete
+    </span>Digest: sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7072feef0c
+    Status: Downloaded newer image <span class="k">for </span>ubuntu:latest
+    root@3b599cdf3ca5:/#
+</code></pre></div></div>
+<p>As you can see in interactive mode we are dropped into container terminal immediately after hittin run. Typing exit should allow you to exit shell, Another cool thing we can try is to run an interactive container and send it to backgroup and having the option to later attach to the sessions.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-dit</span> ubuntu bash
+    a1bce118014dea63b44851f2dca1459d3f10373f762d2547c7d67093ef819a0d
+</code></pre></div></div>
+
+<p>We can now interact with the container by attaching to it, let’s get the id first and attach</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps <span class="nt">-q</span>
+    a1bce118014d
+
+docker attach a1bce118014d
+    root@a1bce118014d:/#
+</code></pre></div></div>
+<p>As always explore different command options using help for example <code class="language-plaintext highlighter-rouge">docker run --help</code> understanding command options can unlock more advance features and help with scripting. For our next trick let’s run a local nginx webserver and expost a port on the host to access the application.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-dit</span> <span class="nt">--name</span> webserver <span class="nt">-p</span> 8080:80 nginx
+    Unable to find image <span class="s1">'nginx:latest'</span> locally
+    latest: Pulling from library/nginx
+    4174e33a2c9e: Pull <span class="nb">complete
+    </span>0289d65812c3: Pull <span class="nb">complete
+    </span>ec781dee3f47: Pull <span class="nb">complete
+    </span>9baba07a35b6: Pull <span class="nb">complete
+    </span>980067d12da2: Pull <span class="nb">complete
+    </span>6b40784e4837: Pull <span class="nb">complete
+    </span>f0b77348d9b0: Pull <span class="nb">complete
+    </span>00238b7dc6b2: Download <span class="nb">complete
+    </span>c96ca1f4ddf7: Download <span class="nb">complete
+    </span>Digest: sha256:dec7a90bd0973b076832dc56933fe876bc014929e14b4ec49923951405370112
+    Status: Downloaded newer image <span class="k">for </span>nginx:latest
+    aa42a10c60011f7106b09f64eabae097828ca7e53aa2e1bd391c56c2eb6d6655
+</code></pre></div></div>
+
+<p class="note">Basically, the -p flag maps a port on your host machine to a port inside the container. The format is always <code class="language-plaintext highlighter-rouge">host:container</code>. To explain containers run in their own network namespace they’re isolated from your host network by default. Port 80 inside the container is completely invisible to the outside world unless you explicitly punch a hole through with -p. Without it, nothing can reach your containerized app, even from the same machine. Also you only expose ports for services that genuinely need to be reachable from outside. containers on the same Docker network talk to each other directly by container name without exposing anything to the host.</p>
+
+<p>We should now be able to connect to our container over port 8080</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl localhost:8080
+    &lt;<span class="o">!</span>DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;<span class="nb">head</span><span class="o">&gt;</span>
+    &lt;title&gt;Welcome to nginx!&lt;/title&gt;
+    &lt;style&gt;
+    html <span class="o">{</span> color-scheme: light dark<span class="p">;</span> <span class="o">}</span>
+    body <span class="o">{</span> width: 35em<span class="p">;</span> margin: 0 auto<span class="p">;</span>
+    font-family: Tahoma, Verdana, Arial, sans-serif<span class="p">;</span> <span class="o">}</span>
+    &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+    &lt;p&gt;If you see this page, nginx is successfully installed and working.
+    Further configuration is required <span class="k">for </span>the web server, reverse proxy,
+    API gateway, load balancer, content cache, or other features.&lt;/p&gt;
+
+    &lt;p&gt;For online documentation and support please refer to
+    &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">"https://nginx.org/"</span><span class="o">&gt;</span>nginx.org&lt;/a&gt;.&lt;br/&gt;
+    To engage with the community please visit
+    &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">"https://community.nginx.org/"</span><span class="o">&gt;</span>community.nginx.org&lt;/a&gt;.&lt;br/&gt;
+    For enterprise grade support, professional services, additional
+    security features and capabilities please refer to
+    &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">"https://f5.com/nginx"</span><span class="o">&gt;</span>f5.com/nginx&lt;/a&gt;.&lt;/p&gt;
+
+    &lt;p&gt;&lt;em&gt;Thank you <span class="k">for </span>using nginx.&lt;/em&gt;&lt;/p&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code></pre></div></div>
+
+<p>Let’s create a custom html page and copy to our container</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&gt;</span> index.html <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh">
+&gt; Welcome to Docker Training!!
+&gt; &gt; EOF
+&gt; EOF
+</span></code></pre></div></div>
+
+<p>Using the cp command we can now move our index.html file to our container and test using curl</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker <span class="nb">cp </span>index.html webserver:/usr/share/nginx/html/index.html
+    Successfully copied 2.05kB to webserver:/usr/share/nginx/html/index.html
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl localhost:8080
+    Welcome to Docker Training!!
+    <span class="o">&gt;</span> EOF
+</code></pre></div></div>
+
+<p>Now that we have completed our hands-on we can can simply stop and remove the container. First is we want to stop our container.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop webserver
+    webserver
+</code></pre></div></div>
+
+<p>Now that our container is stopped we can go ahead and remove all stopped/completed containers. We can only perform this actions once the container is in a stopped state</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker system prune
+    WARNING! This will remove:
+    - all stopped containers
+    - all networks not used by at least one container
+    - all dangling images
+    - unused build cache
+
+    Are you sure you want to <span class="k">continue</span>? <span class="o">[</span>y/N] y
+    Deleted Containers:
+    aa42a10c60011f7106b09f64eabae097828ca7e53aa2e1bd391c56c2eb6d6655
+    a1bce118014dea63b44851f2dca1459d3f10373f762d2547c7d67093ef819a0d
+    b839eb5cf84fcff55774de8a6ee1306a0ed6923506fbfe51b911ebdb95e7cc26
+    3b599cdf3ca5172afe281c00919968a85c354c6f956a4b7d83c8a2fd0d53da84
+    3d7993af65773a244cbee322bdd4fa69d83185da1d6db7a3e0be109cc04ed64c
+
+    Total reclaimed space: 20.48kB
+</code></pre></div></div>
+
+<h2 id="manage-image-lifecyle">Manage Image Lifecyle</h2>
+
+<p>Let’s begin by listing the available images on our machine, you would’ve noted that on every <code class="language-plaintext highlighter-rouge">docker run</code> command, docker would fetch images from DockerHub if not available locally with this we should see some outputs</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image <span class="nb">ls
+
+    </span>IMAGE                ID             DISK USAGE   CONTENT SIZE   EXTRA
+    hello-world:latest   85404b3c5395       21.8kB         9.52kB
+    nginx:latest         dec7a90bd097        237MB         65.8MB
+    ubuntu:latest        186072bba1b2        117MB         31.7MB
+</code></pre></div></div>
+
+<p>We do have the option to donwload images without <code class="language-plaintext highlighter-rouge">docker run</code> command, let’s see an example</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image pull alpine
+    Using default tag: latest
+    latest: Pulling from library/alpine
+    589002ba0eae: Pull <span class="nb">complete
+    </span>9e595aac14e0: Download <span class="nb">complete
+    </span>caa817ad3aea: Download <span class="nb">complete
+    </span>Digest: sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+    Status: Downloaded newer image <span class="k">for </span>alpine:latest
+    docker.io/library/alpine:latest
+</code></pre></div></div>
+
+<p>By default, the Daemon is configured to fetch the image from the Docker Hub registry and from the user account library, where Docker stores all the publicly available official images and fetches the image with tag as latest. We can override the default behavior by specifying what we want.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>docker image pull gcr.io/google-samples/hello-app:2.0
+    01cb7d118b5d: Pull <span class="nb">complete
+    </span>473d8557b1b2: Pull <span class="nb">complete
+    </span>9ef7d74bdfdf: Pull <span class="nb">complete
+    </span>27be814a09eb: Pull <span class="nb">complete
+    </span>33e068de2649: Pull <span class="nb">complete
+    </span>b6824ed73363: Pull <span class="nb">complete
+    </span>9112d77ee5b1: Pull <span class="nb">complete
+    </span>7c12895b777b: Pull <span class="nb">complete
+    </span>e33bce57de28: Pull <span class="nb">complete
+    </span>5664b15f108b: Pull <span class="nb">complete
+    </span>4aa0ea1413d3: Pull <span class="nb">complete
+    </span>83f8d4690e1f: Pull <span class="nb">complete
+    </span>a4ba90834fb4: Pull <span class="nb">complete
+    </span>1c56d6035a42: Pull <span class="nb">complete
+    </span>df368711b362: Pull <span class="nb">complete
+    </span>Digest: sha256:354693bb6163212a5678078a6859caf2e29e9589d2b60142b171494bcc692b0b
+    Status: Downloaded newer image <span class="k">for </span>gcr.io/google-samples/hello-app:2.0
+    gcr.io/google-samples/hello-app:2.0
+</code></pre></div></div>
+
+<p>From the above we can see that our image is being pulled from a different registry name: gcr.io. You can also create and manage your own container images. The process is fairly straight forward once you understand your requirements and dependencies. Let’s build a quick ngnix container with some customizaion.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&gt;</span> Dockerfile <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+&gt; FROM nginx
+&gt; COPY . /usr/share/nginx/html
+&gt; EXPOSE 80/tcp
+&gt; CMD ["nginx", "-g daemon off;"]
+&gt; EOF
+</span></code></pre></div></div>
+
+<p>If all is well we should be able to build our image without issue</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image build <span class="nb">.</span> <span class="nt">-t</span> nginx:version1
+    <span class="o">[</span>+] Building 0.7s <span class="o">(</span>7/7<span class="o">)</span> FINISHED                                                                                                                           docker:default
+    <span class="o">=&gt;</span> <span class="o">[</span>internal] load build definition from Dockerfile                                                                                                                 0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> transferring dockerfile: 123B                                                                                                                                 0.0s
+    <span class="o">=&gt;</span> <span class="o">[</span>internal] load metadata <span class="k">for </span>docker.io/library/nginx:latest                                                                                                      0.0s
+    <span class="o">=&gt;</span> <span class="o">[</span>internal] load .dockerignore                                                                                                                                    0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> transferring context: 2B                                                                                                                                      0.0s
+    <span class="o">=&gt;</span> <span class="o">[</span>internal] load build context                                                                                                                                    0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> transferring context: 7.65kB                                                                                                                                  0.0s
+    <span class="o">=&gt;</span> <span class="o">[</span>1/2] FROM docker.io/library/nginx:latest@sha256:dec7a90bd0973b076832dc56933fe876bc014929e14b4ec49923951405370112                                                0.2s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> resolve docker.io/library/nginx:latest@sha256:dec7a90bd0973b076832dc56933fe876bc014929e14b4ec49923951405370112                                                0.0s
+    <span class="o">=&gt;</span> <span class="o">[</span>2/2] COPY <span class="nb">.</span> /usr/share/nginx/html                                                                                                                               0.0s
+    <span class="o">=&gt;</span> exporting to image                                                                                                                                               0.2s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> exporting layers                                                                                                                                              0.1s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> exporting manifest sha256:5917ecfc286cfaf24b8f60b1aae2f1b0d99cb22cfd43900d2f57fc548a10aa1f                                                                    0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> exporting config sha256:53631216239c4cf702541fdcda5e83b77008f0f2df58c666bdd9bda1baeed3ed                                                                      0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> exporting attestation manifest sha256:1310dd522f627ad33d5979f55fa2aa9495f3e527a33eec4d5fd97d67587600dc                                                        0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> exporting manifest list sha256:d8b0b9a2149064da59679c25b00e549d4a43f6f31bf6ede4179d4c51cd2c21ea                                                               0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> naming to docker.io/library/nginx:version1                                                                                                                    0.0s
+    <span class="o">=&gt;</span> <span class="o">=&gt;</span> unpacking to docker.io/library/nginx:version1
+</code></pre></div></div>
+
+<p>Using our newly created image, let’s launch a new container for nginx web server</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-dit</span> <span class="nt">--name</span> webapp <span class="nt">-p</span> 8081:80 nginx:version1
+    441b53ca1b346fce7ef0f59494d317d0ba05635ce7d74965ed6d5c1456bfe995
+</code></pre></div></div>
+
+<p>By running our curl command, we can see that our custom image was created with out nginx base which we downloaded and edited earlier</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl localhost:8081
+    Welcome to Docker Training!!
+    <span class="o">&gt;</span> EOF
+</code></pre></div></div>
+
+<p>As we nearing the end of our hands-on section, let’s clean up unused and unneeded images</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image prune <span class="nt">-a</span>
+    WARNING! This will remove all images without at least one container associated to them.
+    Are you sure you want to <span class="k">continue</span>? <span class="o">[</span>y/N] y
+    Deleted Images:
+    untagged: alpine:latest
+    deleted: sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+    deleted: sha256:59855d3dceb3ae53991193bd03301e082b2a7faa56a514b03527ae0ec2ce3a95
+    deleted: sha256:fe2385f276937dcf780967a5385767fd34b34580c8ed8d303a0cd1485a692635
+    untagged: hello-world:latest
+    deleted: sha256:85404b3c53951c3ff5d40de0972b1bb21fafa2e8daa235355baf44f33db9dbdd
+    deleted: sha256:2771e37a12b7bcb2902456ecf3f29bf9ee11ec348e66e8eb322d9780ad7fc2df
+    deleted: sha256:6b75187531c5e9b6a85c8946d5d82e4ef3801e051fbff338f382f3edfa60e3d2
+    untagged: nginx:latest
+    deleted: sha256:717872295c96e0ffc6081bbb5f325a390cf1a580eb4b0487be1bbb00cd760866
+    untagged: ubuntu:latest
+    deleted: sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7072feef0c
+    deleted: sha256:67efaecc0031a612cf7bb3c863407018dbbef0a971f62032b77aa542ac8ac0d2
+    deleted: sha256:563380ac99d874a850dc0fa90a491caba7833cbf9b7aa50f7a9a56f2dc2e1b81
+    untagged: gcr.io/google-samples/hello-app:2.0
+    deleted: sha256:354693bb6163212a5678078a6859caf2e29e9589d2b60142b171494bcc692b0b
+
+    Total reclaimed space: 53.02MB
+</code></pre></div></div>
+
+<p>To uninstall docker, we can simply purge the components we installed earlier</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    The following packages were automatically installed and are no longer required:
+    libslirp0 pigz slirp4netns
+    Use <span class="s1">'sudo apt autoremove'</span> to remove them.
+    The following packages will be REMOVED:
+    containerd.io<span class="k">*</span> docker-buildx-plugin<span class="k">*</span> docker-ce<span class="k">*</span> docker-ce-cli<span class="k">*</span> docker-ce-rootless-extras<span class="k">*</span> docker-compose-plugin<span class="k">*</span>
+    0 upgraded, 0 newly installed, 6 to remove and 45 not upgraded.
+    After this operation, 392 MB disk space will be freed.
+    Do you want to <span class="k">continue</span>? <span class="o">[</span>Y/n] Y
+</code></pre></div></div>
+
+<p>Images, containers, volumes, or custom configuration files on your host aren’t automatically removed. To delete all images, containers, and volumes, run</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo rm</span> <span class="nt">-rf</span> /var/lib/docker
+<span class="nb">sudo rm</span> <span class="nt">-rf</span> /var/lib/containerd
+</code></pre></div></div>
+
+
+</article>
+
+
+  <hr class="dingbat related mb6" />
+
+
+
+
+
+  
+<footer class="content" role="contentinfo">
+  <hr/>
+  
+    <p><small class="copyright">© 2024–2026 Lundi Ngantweni. All rights reserved.
+</small></p>
+  
+  
+    <nav class="legal"><small>
+    
+      
+      <a class="heading flip-title" href="/LICENSE/">LICENSE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/NOTICE/">NOTICE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/CHANGELOG/">CHANGELOG</a>
+      
+    
+    </small></nav>
+  
+  
+  <hr class="sr-only"/>
+</footer>
+
+
+</main>
+
+  <hy-drawer
+  id="_drawer"
+  class=""
+  side="left"
+  threshold="10"
+  noscroll
+  
+>
+  <header id="_sidebar" class="sidebar" role="banner">
+    
+
+
+
+
+<div class="sidebar-bg " style="background:#0d1117"></div>
+
+    <div class="sidebar-sticky">
+  <div class="sidebar-about">
+    
+      <a class="no-hover" href="/" tabindex="-1">
+        <img src="/assets/img/logo.svg" class="avatar" alt="Lundi Ngantweni" width="120" height="120" loading="lazy" />
+      </a>
+    
+    <a class="sidebar-title" href="/"><h2 class="h1">Lundi Ngantweni</h2></a>
+    
+    
+      <p class="">
+        Cloud &amp; Systems Engineer
+
+      </p>
+    
+  </div>
+
+  <nav class="sidebar-nav heading" role="navigation">
+    <span class="sr-only">Navigation:</span>
+<ul>
+  
+    
+      
+      <li>
+        <a
+          id="_drawer--opened"
+          href="/blog/"
+          class="sidebar-nav-item "
+          
+        >
+          Blog
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/projects/"
+          class="sidebar-nav-item "
+          
+        >
+          Projects
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/resume/"
+          class="sidebar-nav-item "
+          
+        >
+          Résumé
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/docs/"
+          class="sidebar-nav-item "
+          
+        >
+          Documentation
+        </a>
+      </li>
+    
+  
+</ul>
+
+  </nav>
+
+  
+  <div class="sidebar-social">
+    <span class="sr-only">Social:</span>
+<ul>
+  
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/lu-ngantweni" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://www.linkedin.com/in/lundi-n-649a19127/" title="LinkedIn" class="no-mark-external">
+      <span class="icon-linkedin2"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="mailto:lundingantweni@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+  
+</ul>
+
+  </div>
+</div>
+  </header>
+</hy-drawer>
+<hr class="sr-only" hidden />
+
+</hy-push-state>
+
+
+  <!--[if gt IE 10]><!---->
+  <script nomodule>(()=>{var t,n=document.createElement("script");!("noModule"in n)&&"onbeforeload"in n&&(t=!1,document.addEventListener("beforeload",function(e){if(e.target===n)t=!0;else if(!e.target.hasAttribute("nomodule")||!t)return;e.preventDefault()},!0),n.type="module",n.src=".",document.head.appendChild(n),n.remove())})();
+</script>
+  <script src="/assets/js/hydejack-9.2.1.js" type="module"></script>
+  <script src="/assets/js/LEGACY-hydejack-9.2.1.js" nomodule defer></script>
+  
+
+  
+
+  <script type="module">
+    if ('serviceWorker' in navigator) {
+      /**/
+      navigator.serviceWorker.getRegistration()
+        .then(r => r.unregister())
+        .catch(() => {});
+      /**/
+    }
+  </script>
+<!--<![endif]-->
+  <!-- Custom body scripts -->
+
+<!-- Swipe hint on cover page (mobile only) -->
+<script>
+(function() {
+  // Only show on cover pages
+  if (!document.body.querySelector('.sidebar.cover, hy-drawer.cover')) return;
+  // Only show on touch/small screens
+  if (window.innerWidth > 1024) return;
+  // Only show once per session
+  if (sessionStorage.getItem('swipe-hint-shown')) return;
+
+  var hint = document.createElement('div');
+  hint.className = 'swipe-hint';
+  hint.innerHTML = '<span class="swipe-hint-icon">←</span><span class="swipe-hint-text">Swipe left to enter</span>';
+  document.body.appendChild(hint);
+  sessionStorage.setItem('swipe-hint-shown', '1');
+
+  // Auto-dismiss after 4 seconds or on tap
+  var dismiss = function() {
+    hint.classList.add('swipe-hint-hidden');
+    setTimeout(function() { hint.remove(); }, 500);
+  };
+  hint.addEventListener('click', dismiss);
+  setTimeout(dismiss, 4000);
+})();
+</script>
+
+
+
+<div hidden>
+  
+  <h2 class="sr-only">Templates (for web app):</h2>
+
+  <template id="_animation-template">
+  <div class="animation-main fixed-top">
+    <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+</ul></nav>
+    <div class="content">
+      <div class="page"></div>
+    </div>
+  </div>
+</template>
+
+  <template id="_loading-template">
+  <div class="loading nav-btn fr">
+    <span class="sr-only">Loading…</span>
+    <span class="icon-cog"></span>
+  </div>
+</template>
+
+  <template id="_error-template">
+  <div class="page">
+    <h1 class="page-title">Error</h1>
+    
+    
+    <p class="lead">
+      Sorry, an error occurred while loading <a class="this-link" href=""></a>.
+
+    </p>
+  </div>
+</template>
+
+  <template id="_permalink-template">
+  <a href="#" class="permalink">
+    <span class="sr-only">Permalink</span>
+    <span class="content-hash"></span>
+  </a>
+</template>
+
+  
+  
+    <template id="_dark-mode-template">
+  <button id="_dark-mode" class="nav-btn no-hover" >
+    <span class="sr-only">Dark Mode</span>
+    <span class="icon-brightness-contrast"></span>
+  </button>
+</template>
+
+  
+  
+    <template id="_search-template">
+  <button id="_search" class="nav-btn no-hover">
+    <label class="sr-only" for="_search-input">Search</label>
+    <span class="icon-search"></span>
+  </button>
+  <div id="_search-box">
+    <div class="nav-btn">
+      <span class="icon-search"></span>
+    </div>
+    <input 
+      id="_search-input"
+      type="search"
+      class="form-control form-control-lg nav-btn"
+      placeholder="Build with JEKYLL_ENV=production to enable search."
+    />
+    <button type="reset" class="nav-btn no-hover">
+      <span class="sr-only">Close</span>
+      <span class="icon-cross"></span>
+    </button>
+  </div>
+  <div id="_hits"></div>
+</template>
+
+  
+</div>
+
+</body>
+</html>

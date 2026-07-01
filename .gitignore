@@ -1,0 +1,15 @@
+# Resume page - requires authorization (to be implemented)
+resume/
+assets/resume.json
+
+# Editor/IDE
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jekyll / build artifacts (if rebuilding locally)
+_site/
+.jekyll-cache/
+.jekyll-metadata

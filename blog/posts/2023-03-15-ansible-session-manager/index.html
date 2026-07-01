@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+
+
+<head>
+  
+
+
+
+
+  <meta name="robots" content="noindex">
+
+
+
+  
+    
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Connecting Ansible over AWS Session Manager | Lundi Ngantweni</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Connecting Ansible over AWS Session Manager" />
+<meta name="author" content="Lundi Ngantweni" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="How to configure Ansible to connect over AWS Session Manager" />
+<meta property="og:description" content="How to configure Ansible to connect over AWS Session Manager" />
+<meta property="og:site_name" content="Lundi Ngantweni" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-03-15T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Connecting Ansible over AWS Session Manager" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Lundi Ngantweni"},"dateModified":"2026-04-06T18:14:31+00:00","datePublished":"2023-03-15T00:00:00+00:00","description":"How to configure Ansible to connect over AWS Session Manager","headline":"Connecting Ansible over AWS Session Manager","mainEntityOfPage":{"@type":"WebPage","@id":"/blog/posts/2023-03-15-ansible-session-manager/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/logo.svg"},"name":"Lundi Ngantweni"},"url":"/blog/posts/2023-03-15-ansible-session-manager/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  
+    <meta name="keywords" content="cloud,aws,linux,devops,infrastructure,automation,systems-engineering">
+  
+
+
+
+  <meta name="color-scheme" content="dark light">
+
+
+
+  <meta name="theme-color" content="rgb(13,17,23)">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lundi Ngantweni">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="application-name" content="Lundi Ngantweni">
+
+<meta name="generator" content="Hydejack v9.2.1" />
+
+
+<link rel="alternate" href="/blog/posts/2023-03-15-ansible-session-manager/" hreflang="en">
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Lundi Ngantweni" />
+
+
+<link rel="shortcut icon"    href="/assets/icons/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/icons/favicon.svg">
+
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+
+
+<link rel="preload" href="/assets/img/swipe.svg" as="image" id="_hrefSwipeSVG">
+
+<link rel="dns-prefetch" href="/assets/js/search-worker-9.2.1.js" as="worker" id="_hrefSearch">
+
+  
+  <link rel="dns-prefetch" href="/assets/bower_components/katex/dist/katex.min.css" id="_katexPreload">
+  <noscript><link rel="stylesheet" href="/assets/bower_components/katex/dist/katex.min.css"></noscript>
+
+
+
+
+
+<script>((r,a)=>{function d(e,t,n,o){e.addEventListener?e.addEventListener(t,n,o):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n}r.loadJS=function(e,t){var n=a.createElement("script"),e=(n.src=e,t&&d(n,"load",t,{once:!0}),a.scripts[0]);return e.parentNode.insertBefore(n,e),n},r._loaded=!1,r.loadJSDeferred=function(e,t){var n=a.createElement("script");function o(){r._loaded=!0,t&&d(n,"load",t,{once:!0});var e=a.scripts[0];e.parentNode.insertBefore(n,e)}return n.src=e,r._loaded?o():d(r,"load",o,{once:!0}),n},r.setRel=r.setRelStylesheet=function(e){d(a.getElementById(e),"load",function(){this.rel="stylesheet"},{once:!0})}})(window,document);
+!function(a){"use strict";var b=function(b,c,d){function e(a){return h.body?a():void setTimeout(function(){e(a)})}function f(){i.addEventListener&&i.removeEventListener("load",f),i.media=d||"all"}var g,h=a.document,i=h.createElement("link");if(c)g=c;else{var j=(h.body||h.getElementsByTagName("head")[0]).childNodes;g=j[j.length-1]}var k=h.styleSheets;i.rel="stylesheet",i.href=b,i.media="only x",e(function(){g.parentNode.insertBefore(i,c?g:g.nextSibling)});var l=function(a){for(var b=i.href,c=k.length;c--;)if(k[c].href===b)return a();setTimeout(function(){l(a)})};return i.addEventListener&&i.addEventListener("load",f),i.onloadcssdefined=l,l(f),i};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
+!function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);
+!function(w) {
+  w._baseURL = '/';
+  w._publicPath = '/assets/js/';
+  w._noPushState = false;
+  w._noDrawer = false;
+  w._noNavbar = false;
+  w._noToc = false;
+  w._noSearch = false;
+  w._advertise = false;
+  w._search = {
+    DATA_URL: '/assets/sitedata.json?no-cache',
+    STORAGE_KEY: 'mini-search/',
+    INDEX_KEY: 'index--2026-07-01T15:14:31+00:00',
+  };
+  w._clapButton = true;
+}(window);</script>
+
+
+
+<!--[if gt IE 8]><!---->
+
+  
+
+
+
+
+<link rel="stylesheet" href="/assets/css/hydejack-9.2.1.css" id="_stylePreload">
+<link rel="stylesheet" href="/assets/icomoon/style.css" id="_iconsPreload">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600%7CJetBrains+Mono:400,500&display=swap" id="_fontsPreload">
+
+
+
+  <style id="_pageStyle">
+
+html{--accent-color: rgb(88,166,255);--accent-color-faded: rgba(0, 200, 255, 0.5);--accent-color-highlight: rgba(0, 200, 255, 0.1);--accent-color-darkened: rgb(88,166,255);--theme-color: rgb(13,17,23);--dark-mode-body-bg: #0d1520;--dark-mode-border-color: #1e3a52}
+</style>
+
+
+<!--<![endif]-->
+
+
+<!-- Favicon (SVG) -->
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+
+<!-- Custom stylesheet -->
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+
+</head>
+
+<body class="no-break-layout">
+  
+<script>
+  window._sunrise = 6;
+  window._sunset =  18;
+  ((e,s)=>{var d="light-mode",a="dark-mode",o=(new Date).getHours();"matchMedia"in e&&e.matchMedia("(prefers-color-scheme)")||(e=(o=o<=e._sunrise||o>=e._sunset?a:d)==a?d:a,s.body.classList.add(o),s.body.classList.remove(e))})(window,document);
+
+</script>
+
+
+
+<hy-push-state
+  id="_pushState"
+  replace-selector="#_main"
+  link-selector="a[href]:not([href^='/assets/']):not(.external):not(.no-push-state)"
+  script-selector="script"
+  duration="500"
+  hashchange
+>
+  
+  
+  <div id="_navbar" class="navbar fixed-top">
+  <div class="content">
+    <span class="sr-only">Jump to:</span>
+    <div class="nav-btn-bar">
+      <a id="_menu" class="nav-btn no-hover" href="#_drawer--opened">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-menu"></span>
+      </a>
+      <div class="nav-span"></div>
+    </div>
+  </div>
+</div>
+<hr class="sr-only" hidden />
+
+  <main
+  id="_main"
+  class="content layout-post"
+  role="main"
+>
+  <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+    <li><a href="/">home</a></li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/blog/">blog</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/blog/posts/">posts</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>2023-03-15-ansible-session-manager</span>
+        
+      </li>
+    
+  
+</ul></nav>
+  <article class="page mb6" role="article">
+  <header class="sf-post-header">
+    <h1 class="page-title">Connecting Ansible over AWS Session Manager</h1>
+
+    <div class="sf-post-meta">
+      <span class="sf-post-date">
+        <time datetime="2023-03-15T00:00:00+00:00">15 Mar 2023</time>
+      </span>
+      
+        <span class="sf-post-meta-sep">in</span>
+        
+          <span class="sf-post-cat">posts</span>
+        
+      
+    </div>
+
+    
+      <p class="sf-post-description">How to configure Ansible to connect over AWS Session Manager
+</p>
+    
+  </header>
+
+  <div class="sf-post-body">
+    <p class="lead">This article aims to explain, how to configure ansible to connect over SSM session manager connection and execute playbooks.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#1-install-aws-collections-using-ansible-galaxy" id="markdown-toc-1-install-aws-collections-using-ansible-galaxy">1. Install aws collections using ansible-galaxy</a></li>
+  <li><a href="#2-enable-the-plugin-in-ansiblecfg" id="markdown-toc-2-enable-the-plugin-in-ansiblecfg">2. Enable the plugin in ansible.cfg</a></li>
+  <li><a href="#3-create-inventory-file" id="markdown-toc-3-create-inventory-file">3. Create inventory file</a></li>
+  <li><a href="#4-create-and-execute-a-playbook" id="markdown-toc-4-create-and-execute-a-playbook">4. Create and execute a playbook</a></li>
+  <li><a href="#troubleshooting" id="markdown-toc-troubleshooting">Troubleshooting</a>    <ol>
+      <li><a href="#sample-log-output-from-cloudwatch-logs" id="markdown-toc-sample-log-output-from-cloudwatch-logs">Sample log output from cloudwatch logs:</a></li>
+    </ol>
+  </li>
+</ol>
+
+<p>The purpose of this article is to explain how to execute Ansible playbooks on EC2 instances over SSM Session Manager connection. To achieve this use-case we make use of Ansible Collections, these are a distribution format for Ansible content that can include playbooks, roles, modules, and plugins. For this exercise we will make use of the following plugins:</p>
+
+<p><a href="https://docs.ansible.com/projects/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html">amazon.aws.aws_ec2</a> - Get inventory hosts from EC2<br />
+<a href="https://docs.ansible.com/projects/ansible/latest/collections/community/aws/aws_ssm_connection.html#ansible-collections-community-aws-aws-ssm-connection">community.aws.aws_ssm</a> - This connection plugin allows Ansible to execute tasks on an EC2 instance via the aws ssm CLI</p>
+
+<p>The above plugins form part of the amazon.aws (maintained by the Ansible cloud team) and community.aws (maintained by the Ansible community) collections. These modules and plugins offer a variety of Ansible content to help automate the management of AWS resources.</p>
+
+<p class="note" title="Disclaimer">These are third-party plugins and customers can reach out to vendor and/or community for support issues pertaining these plugins. We can however assist with SSM connection issues and session manager plugin. For everything else, best efforts.</p>
+
+<p>Okay! Let’s put the lab together by preparing our instances.</p>
+
+<p>Controller Instance:<br />
+<a href="https://docs.ansible.com/projects/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible">Ansible</a><br />
+<a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/manually-install-ssm-agent-linux.html">SSM Agent</a><br />
+<a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">Session manager plugin</a><br />
+<a href="https://docs.python-guide.org/starting/install3/linux/">python &gt;= 3.6</a><br />
+<a href="https://docs.aws.amazon.com/boto3/latest/guide/quickstart.html">boto3 &gt;= 1.16.0</a><br />
+<a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">awscli (optional)</a></p>
+
+<p>Target Instance (s)
+SSM Agent
+<a href="https://www.tecmint.com/install-curl-in-linux/">curl installed</a></p>
+
+<p>Once we’ve prepped our environment, our next steps will be to configure our inventory using the amazon.aws.aws_ec2</p>
+
+<h4 id="1-install-aws-collections-using-ansible-galaxy">1. Install aws collections using ansible-galaxy</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-galaxy collection <span class="nb">install </span>community.aws
+</code></pre></div></div>
+
+<p class="note">When you install the community.aws collection it will automatically install the amazon.aws collection.</p>
+
+<h4 id="2-enable-the-plugin-in-ansiblecfg">2. Enable the plugin in ansible.cfg</h4>
+
+<p>This can be done on global config /etc/ansible/ansible.cfg, for this exercise we will create a local cfg file.</p>
+
+<p>First we create a project folder and cd into that folder:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>project1
+<span class="nb">cd </span>project1
+</code></pre></div></div>
+
+<p>Generate ansible.cfg file:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-config init <span class="nt">--disabled</span> <span class="o">&gt;</span> ansible.cfg
+</code></pre></div></div>
+
+<p>Using your favorite text editor, edit ansible.cfg » find entry: [inventory] and enable EC2 plugin, similar to below:</p>
+
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "ansible.cfg"
+</span><span class="nn">[inventory]</span> <span class="py">enable_plugins</span> <span class="p">=</span> <span class="s">amazon.aws.aws_ec2</span>
+</code></pre></div></div>
+
+<p>Once the above is complete, you should now have a ansible.cfg file with plugin enabled for local testing. Next steps will be to create inventory.</p>
+
+<h4 id="3-create-inventory-file">3. Create inventory file</h4>
+
+<table class="note">
+  <tbody>
+    <tr>
+      <td>To create inventory file, we create aws_ec2.yml in our project directory (Use a YAML configuration file that ends with aws_ec2.{yml</td>
+      <td>yaml}).</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi aws_ec2.yml
+</code></pre></div></div>
+
+<p>Here we specify our ec2_inventory plugin and set some parameters, can reference <a href="https://docs.ansible.com/projects/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html">docs</a> for parameter options.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file: "aws_ec2.yml"</span>
+<span class="c1">##Inventory</span>
+<span class="na">plugin</span><span class="pi">:</span> <span class="s">amazon.aws.aws_ec2</span>
+<span class="na">regions</span><span class="pi">:</span>
+ <span class="pi">-</span> <span class="s2">"</span><span class="s">us-east-1"</span>
+<span class="na">filters</span><span class="pi">:</span>
+ <span class="na">instance-state-name </span><span class="pi">:</span> <span class="s">running</span>
+<span class="na">hostnames</span><span class="pi">:</span>
+ <span class="pi">-</span> <span class="s">instance-id</span>
+<span class="na">compose</span><span class="pi">:</span>
+  <span class="na">ansible_host</span><span class="pi">:</span> <span class="s">instance-id</span>
+</code></pre></div></div>
+
+<p>Now that we have our inventory file, let’s do a test run by performing a list operation:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"all"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"children"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"aws_ec2"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ungrouped"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"aws_ec2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"hosts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"i-04dc05dca9b5ede89"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"i-0e6ee2fa57c6d1b46"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="figcaption">Inventory test output showing 2 discovered instances.</p>
+
+<p>As we can see from the truncated output, ec2-inventory returned 2 instances (Controller and target) now that we confirmed that this works, lets execute a playbook.</p>
+
+<h4 id="4-create-and-execute-a-playbook">4. Create and execute a playbook</h4>
+
+<p>Using your text editor of choice, let’s create a playbook to install nginx. You can reference <a href="https://docs.ansible.com/projects/ansible/latest/collections/amazon/aws/aws_ec2_inventory.html">docs</a> for variable options and for example playbooks for both windows and linux.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file: "test.yml"</span>
+<span class="nn">---</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install a Nginx Package on Linux Instance</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">all</span>
+  <span class="na">vars</span><span class="pi">:</span>
+    <span class="na">ansible_connection</span><span class="pi">:</span> <span class="s">community.aws.aws_ssm</span>
+    <span class="na">ansible_aws_ssm_region</span><span class="pi">:</span> <span class="s">us-east-1</span>
+    <span class="na">ansible_aws_ssm_bucket_name</span><span class="pi">:</span> <span class="s">testing-inspector-policy</span>
+  <span class="na">tasks</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install a Nginx Package</span>
+      <span class="na">yum</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+</code></pre></div></div>
+
+<p class="faded">Using the –limit option will exclude controller from play.</p>
+
+<p>To confirm if the nginx was installed on instance, we can connect via session manager and check if the service is present (inactive):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ssm start-session <span class="nt">--target</span> i-0e6ee2fa57c6d1b46
+Starting session with SessionId: testbench_DRS-024b6e23d7767846e
+
+sh-4.4<span class="nv">$ </span><span class="nb">sudo </span>systemctl status nginx
+● nginx.service - The nginx HTTP and reverse proxy server
+   Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/nginx.service<span class="p">;</span> disabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+   Active: inactive <span class="o">(</span>dead<span class="o">)</span>
+</code></pre></div></div>
+
+<p class="figcaption">As expected service is installed but not running due to “present” flag.</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p class="note" title="Reminder">Before working with customer to address issues set the correct expectations regarding support for third-party tools/applications.</p>
+
+<p>Ansible will establish connection to ec2 instance via Session Manager, we start by verifying if we can connect to the instance using session manager without all the bells and whistles:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ssm start-session <span class="nt">--target</span> i-023500a698884d434
+Starting session with SessionId: lunding_awscli-0ef41eeb1b8cc2296
+sh-4.4<span class="err">$</span>
+</code></pre></div></div>
+
+<p>Confirm that session starts without error and run a few commands and confirm that there is no issue with session duration. If you happen to run into any errors you can always review the following documentation for troubleshooting.</p>
+
+<p class="note">If you able to connect to the instance with session manager from terminal, we can rule out SSM. Troubleshooting beyond this point will be on best efforts.</p>
+
+<p>Check for any syntax errors in the following files [ansible.cfg, playbook, inventory, etc]</p>
+
+<p>If the above checkouts, rerun the play using -v, –vv or –vvv depending on the level of verbosity to catch any errors from an ansible perspective.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ansible-playbook <span class="nt">-i</span> aws_ec2.yml test.yml <span class="nt">-vvv</span> <span class="nt">--limit</span> <span class="s1">'!i-0b52f059504ba450e'</span>
+</code></pre></div></div>
+
+<p class="figcaption">The verbose output provides detailed information about each step of the playbook execution including connection establishment, module execution, and task results. Review the EXEC commands for an overview of commands executed on the instance.</p>
+
+<ul>
+  <li>The outputs of the commands can also be reviewed via cloudwatch logs, for more information about saving session data and other session manager preferences you can review this <a href="">article</a></li>
+</ul>
+
+<h3 id="sample-log-output-from-cloudwatch-logs">Sample log output from cloudwatch logs:</h3>
+
+<p><img src="/assets/img/blog/ansible/1.png" alt="Alt text for the image" /></p>
+
+<p class="figcaption">CloudWatch log output showing session activity.</p>
+
+<p>Should you get any errors on logs you can assist with best efforts, alternatively customers can open an issue amazon.aws or community.aws depending on the issue experienced. Once connection is confirmed to be working from a Session Manager perspective all should be good from an SSM perspective, Alternatively customers can use RunCommand to execute ansible playbooks.</p>
+
+  </div>
+
+  <nav class="sf-post-nav">
+    
+      <a href="/blog/posts/2020-12-10-first-steps/" class="sf-post-nav-item sf-post-nav-prev">
+        <span class="sf-post-nav-label">← Previous</span>
+        <span class="sf-post-nav-title">First steps to building a successful career in I.T</span>
+      </a>
+    
+    
+      <a href="/blog/posts/2023-03-30-cloudwatch-alarms/" class="sf-post-nav-item sf-post-nav-next">
+        <span class="sf-post-nav-label">Next →</span>
+        <span class="sf-post-nav-title">Create CloudWatch Alarms for Multiple EC2 Instances & EBS Volumes [Script]</span>
+      </a>
+    
+  </nav>
+</article>
+
+  
+<footer class="content" role="contentinfo">
+  <hr/>
+  
+    <p><small class="copyright">© 2024–2026 Lundi Ngantweni. All rights reserved.
+</small></p>
+  
+  
+    <nav class="legal"><small>
+    
+      
+      <a class="heading flip-title" href="/LICENSE/">LICENSE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/NOTICE/">NOTICE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/CHANGELOG/">CHANGELOG</a>
+      
+    
+    </small></nav>
+  
+  
+  <hr class="sr-only"/>
+</footer>
+
+
+</main>
+
+  <hy-drawer
+  id="_drawer"
+  class=""
+  side="left"
+  threshold="10"
+  noscroll
+  
+>
+  <header id="_sidebar" class="sidebar" role="banner">
+    
+
+
+
+
+<div class="sidebar-bg " style="background:#0d1117"></div>
+
+    <div class="sidebar-sticky">
+  <div class="sidebar-about">
+    
+      <a class="no-hover" href="/" tabindex="-1">
+        <img src="/assets/img/logo.svg" class="avatar" alt="Lundi Ngantweni" width="120" height="120" loading="lazy" />
+      </a>
+    
+    <a class="sidebar-title" href="/"><h2 class="h1">Lundi Ngantweni</h2></a>
+    
+    
+      <p class="">
+        Cloud &amp; Systems Engineer
+
+      </p>
+    
+  </div>
+
+  <nav class="sidebar-nav heading" role="navigation">
+    <span class="sr-only">Navigation:</span>
+<ul>
+  
+    
+      
+      <li>
+        <a
+          id="_drawer--opened"
+          href="/blog/"
+          class="sidebar-nav-item "
+          
+        >
+          Blog
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/projects/"
+          class="sidebar-nav-item "
+          
+        >
+          Projects
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/resume/"
+          class="sidebar-nav-item "
+          
+        >
+          Résumé
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/docs/"
+          class="sidebar-nav-item "
+          
+        >
+          Documentation
+        </a>
+      </li>
+    
+  
+</ul>
+
+  </nav>
+
+  
+  <div class="sidebar-social">
+    <span class="sr-only">Social:</span>
+<ul>
+  
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/lu-ngantweni" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://www.linkedin.com/in/lundi-n-649a19127/" title="LinkedIn" class="no-mark-external">
+      <span class="icon-linkedin2"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="mailto:lundingantweni@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+  
+</ul>
+
+  </div>
+</div>
+  </header>
+</hy-drawer>
+<hr class="sr-only" hidden />
+
+</hy-push-state>
+
+
+  <!--[if gt IE 10]><!---->
+  <script nomodule>(()=>{var t,n=document.createElement("script");!("noModule"in n)&&"onbeforeload"in n&&(t=!1,document.addEventListener("beforeload",function(e){if(e.target===n)t=!0;else if(!e.target.hasAttribute("nomodule")||!t)return;e.preventDefault()},!0),n.type="module",n.src=".",document.head.appendChild(n),n.remove())})();
+</script>
+  <script src="/assets/js/hydejack-9.2.1.js" type="module"></script>
+  <script src="/assets/js/LEGACY-hydejack-9.2.1.js" nomodule defer></script>
+  
+
+  
+
+  <script type="module">
+    if ('serviceWorker' in navigator) {
+      /**/
+      navigator.serviceWorker.getRegistration()
+        .then(r => r.unregister())
+        .catch(() => {});
+      /**/
+    }
+  </script>
+<!--<![endif]-->
+  <!-- Custom body scripts -->
+
+<!-- Swipe hint on cover page (mobile only) -->
+<script>
+(function() {
+  // Only show on cover pages
+  if (!document.body.querySelector('.sidebar.cover, hy-drawer.cover')) return;
+  // Only show on touch/small screens
+  if (window.innerWidth > 1024) return;
+  // Only show once per session
+  if (sessionStorage.getItem('swipe-hint-shown')) return;
+
+  var hint = document.createElement('div');
+  hint.className = 'swipe-hint';
+  hint.innerHTML = '<span class="swipe-hint-icon">←</span><span class="swipe-hint-text">Swipe left to enter</span>';
+  document.body.appendChild(hint);
+  sessionStorage.setItem('swipe-hint-shown', '1');
+
+  // Auto-dismiss after 4 seconds or on tap
+  var dismiss = function() {
+    hint.classList.add('swipe-hint-hidden');
+    setTimeout(function() { hint.remove(); }, 500);
+  };
+  hint.addEventListener('click', dismiss);
+  setTimeout(dismiss, 4000);
+})();
+</script>
+
+
+
+<div hidden>
+  
+  <h2 class="sr-only">Templates (for web app):</h2>
+
+  <template id="_animation-template">
+  <div class="animation-main fixed-top">
+    <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+</ul></nav>
+    <div class="content">
+      <div class="page"></div>
+    </div>
+  </div>
+</template>
+
+  <template id="_loading-template">
+  <div class="loading nav-btn fr">
+    <span class="sr-only">Loading…</span>
+    <span class="icon-cog"></span>
+  </div>
+</template>
+
+  <template id="_error-template">
+  <div class="page">
+    <h1 class="page-title">Error</h1>
+    
+    
+    <p class="lead">
+      Sorry, an error occurred while loading <a class="this-link" href=""></a>.
+
+    </p>
+  </div>
+</template>
+
+  <template id="_permalink-template">
+  <a href="#" class="permalink">
+    <span class="sr-only">Permalink</span>
+    <span class="content-hash"></span>
+  </a>
+</template>
+
+  
+  
+    <template id="_dark-mode-template">
+  <button id="_dark-mode" class="nav-btn no-hover" >
+    <span class="sr-only">Dark Mode</span>
+    <span class="icon-brightness-contrast"></span>
+  </button>
+</template>
+
+  
+  
+    <template id="_search-template">
+  <button id="_search" class="nav-btn no-hover">
+    <label class="sr-only" for="_search-input">Search</label>
+    <span class="icon-search"></span>
+  </button>
+  <div id="_search-box">
+    <div class="nav-btn">
+      <span class="icon-search"></span>
+    </div>
+    <input 
+      id="_search-input"
+      type="search"
+      class="form-control form-control-lg nav-btn"
+      placeholder="Build with JEKYLL_ENV=production to enable search."
+    />
+    <button type="reset" class="nav-btn no-hover">
+      <span class="sr-only">Close</span>
+      <span class="icon-cross"></span>
+    </button>
+  </div>
+  <div id="_hits"></div>
+</template>
+
+  
+</div>
+
+</body>
+</html>

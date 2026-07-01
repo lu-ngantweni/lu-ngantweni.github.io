@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+
+
+<head>
+  
+
+
+
+
+  <meta name="robots" content="noindex">
+
+
+
+  
+    
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Docker Notes | Lundi Ngantweni</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Docker Notes" />
+<meta name="author" content="Lundi Ngantweni" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="This page covers basic commands, best practices and general troubleshooting guidances" />
+<meta property="og:description" content="This page covers basic commands, best practices and general troubleshooting guidances" />
+<meta property="og:site_name" content="Lundi Ngantweni" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Docker Notes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Lundi Ngantweni"},"dateModified":"2026-06-28T16:09:50+00:00","description":"This page covers basic commands, best practices and general troubleshooting guidances","headline":"Docker Notes","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/logo.svg"},"name":"Lundi Ngantweni"},"url":"/docs/Containers/Docker/Notes"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  
+    <meta name="keywords" content="cloud,aws,linux,devops,infrastructure,automation,systems-engineering">
+  
+
+
+
+  <meta name="color-scheme" content="dark light">
+
+
+
+  <meta name="theme-color" content="rgb(13,17,23)">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lundi Ngantweni">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="application-name" content="Lundi Ngantweni">
+
+<meta name="generator" content="Hydejack v9.2.1" />
+
+
+<link rel="alternate" href="/docs/Containers/Docker/Notes" hreflang="en">
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Lundi Ngantweni" />
+
+
+<link rel="shortcut icon"    href="/assets/icons/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/icons/favicon.svg">
+
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+
+
+<link rel="preload" href="/assets/img/swipe.svg" as="image" id="_hrefSwipeSVG">
+
+<link rel="dns-prefetch" href="/assets/js/search-worker-9.2.1.js" as="worker" id="_hrefSearch">
+
+  
+  <link rel="dns-prefetch" href="/assets/bower_components/katex/dist/katex.min.css" id="_katexPreload">
+  <noscript><link rel="stylesheet" href="/assets/bower_components/katex/dist/katex.min.css"></noscript>
+
+
+
+
+
+<script>((r,a)=>{function d(e,t,n,o){e.addEventListener?e.addEventListener(t,n,o):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n}r.loadJS=function(e,t){var n=a.createElement("script"),e=(n.src=e,t&&d(n,"load",t,{once:!0}),a.scripts[0]);return e.parentNode.insertBefore(n,e),n},r._loaded=!1,r.loadJSDeferred=function(e,t){var n=a.createElement("script");function o(){r._loaded=!0,t&&d(n,"load",t,{once:!0});var e=a.scripts[0];e.parentNode.insertBefore(n,e)}return n.src=e,r._loaded?o():d(r,"load",o,{once:!0}),n},r.setRel=r.setRelStylesheet=function(e){d(a.getElementById(e),"load",function(){this.rel="stylesheet"},{once:!0})}})(window,document);
+!function(a){"use strict";var b=function(b,c,d){function e(a){return h.body?a():void setTimeout(function(){e(a)})}function f(){i.addEventListener&&i.removeEventListener("load",f),i.media=d||"all"}var g,h=a.document,i=h.createElement("link");if(c)g=c;else{var j=(h.body||h.getElementsByTagName("head")[0]).childNodes;g=j[j.length-1]}var k=h.styleSheets;i.rel="stylesheet",i.href=b,i.media="only x",e(function(){g.parentNode.insertBefore(i,c?g:g.nextSibling)});var l=function(a){for(var b=i.href,c=k.length;c--;)if(k[c].href===b)return a();setTimeout(function(){l(a)})};return i.addEventListener&&i.addEventListener("load",f),i.onloadcssdefined=l,l(f),i};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
+!function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);
+!function(w) {
+  w._baseURL = '/';
+  w._publicPath = '/assets/js/';
+  w._noPushState = false;
+  w._noDrawer = false;
+  w._noNavbar = false;
+  w._noToc = false;
+  w._noSearch = false;
+  w._advertise = false;
+  w._search = {
+    DATA_URL: '/assets/sitedata.json?no-cache',
+    STORAGE_KEY: 'mini-search/',
+    INDEX_KEY: 'index--2026-07-01T15:14:31+00:00',
+  };
+  w._clapButton = true;
+}(window);</script>
+
+
+
+<!--[if gt IE 8]><!---->
+
+  
+
+
+
+
+<link rel="stylesheet" href="/assets/css/hydejack-9.2.1.css" id="_stylePreload">
+<link rel="stylesheet" href="/assets/icomoon/style.css" id="_iconsPreload">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600%7CJetBrains+Mono:400,500&display=swap" id="_fontsPreload">
+
+
+
+  <style id="_pageStyle">
+
+html{--accent-color: rgb(88,166,255);--accent-color-faded: rgba(0, 200, 255, 0.5);--accent-color-highlight: rgba(0, 200, 255, 0.1);--accent-color-darkened: rgb(88,166,255);--theme-color: rgb(13,17,23);--dark-mode-body-bg: #0d1520;--dark-mode-border-color: #1e3a52}
+</style>
+
+
+<!--<![endif]-->
+
+
+<!-- Favicon (SVG) -->
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+
+<!-- Custom stylesheet -->
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+
+</head>
+
+<body class="no-break-layout">
+  
+<script>
+  window._sunrise = 6;
+  window._sunset =  18;
+  ((e,s)=>{var d="light-mode",a="dark-mode",o=(new Date).getHours();"matchMedia"in e&&e.matchMedia("(prefers-color-scheme)")||(e=(o=o<=e._sunrise||o>=e._sunset?a:d)==a?d:a,s.body.classList.add(o),s.body.classList.remove(e))})(window,document);
+
+</script>
+
+
+
+<hy-push-state
+  id="_pushState"
+  replace-selector="#_main"
+  link-selector="a[href]:not([href^='/assets/']):not(.external):not(.no-push-state)"
+  script-selector="script"
+  duration="500"
+  hashchange
+>
+  
+  
+  <div id="_navbar" class="navbar fixed-top">
+  <div class="content">
+    <span class="sr-only">Jump to:</span>
+    <div class="nav-btn-bar">
+      <a id="_menu" class="nav-btn no-hover" href="#_drawer--opened">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-menu"></span>
+      </a>
+      <div class="nav-span"></div>
+    </div>
+  </div>
+</div>
+<hr class="sr-only" hidden />
+
+  <main
+  id="_main"
+  class="content layout-page"
+  role="main"
+>
+  <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+    <li><a href="/">home</a></li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/">docs</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/Containers/">Containers</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/Containers/Docker/">Docker</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>Notes</span>
+        
+      </li>
+    
+  
+</ul></nav>
+  <article class="page mb6" role="article">
+  <header>
+    <h1 class="page-title">Docker Notes</h1>
+    
+
+
+
+  
+    <div class="hr pb0"></div>
+  
+
+
+  </header>
+
+  <p>This page covers some basic and generic docker commands, along with best practices and troubleshooting notes from my lab environment. Generally I saved commands with the hopes of building scripts but also save notes for compilation and searchable from a single location.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#1-container-lifecycle" id="markdown-toc-1-container-lifecycle">1. Container Lifecycle</a>    <ol>
+      <li><a href="#basic-operations" id="markdown-toc-basic-operations">Basic Operations</a></li>
+      <li><a href="#inspect-running-containers" id="markdown-toc-inspect-running-containers">Inspect Running Containers</a></li>
+    </ol>
+  </li>
+  <li><a href="#2-image-management" id="markdown-toc-2-image-management">2. Image Management</a></li>
+  <li><a href="#3-logs--debugging" id="markdown-toc-3-logs--debugging">3. Logs &amp; Debugging</a>    <ol>
+      <li><a href="#working-with-logs" id="markdown-toc-working-with-logs">Working with logs</a></li>
+      <li><a href="#exec--shell-access" id="markdown-toc-exec--shell-access">Exec &amp; Shell Access</a></li>
+      <li><a href="#copying-files" id="markdown-toc-copying-files">Copying Files</a></li>
+    </ol>
+  </li>
+  <li><a href="#4-docker-compose-commands" id="markdown-toc-4-docker-compose-commands">4. Docker Compose Commands</a>    <ol>
+      <li><a href="#compose-file-best-practices" id="markdown-toc-compose-file-best-practices">Compose File Best Practices</a></li>
+    </ol>
+  </li>
+  <li><a href="#5-volumes--networks" id="markdown-toc-5-volumes--networks">5. Volumes &amp; Networks</a>    <ol>
+      <li><a href="#volumes" id="markdown-toc-volumes">Volumes</a></li>
+      <li><a href="#networks" id="markdown-toc-networks">Networks</a></li>
+    </ol>
+  </li>
+  <li><a href="#6-system-cleanup" id="markdown-toc-6-system-cleanup">6. System Cleanup</a></li>
+  <li><a href="#7-permissions--the-docker-group" id="markdown-toc-7-permissions--the-docker-group">7. Permissions &amp; the Docker Group</a></li>
+  <li><a href="#8-troubleshooting-checklist" id="markdown-toc-8-troubleshooting-checklist">8. Troubleshooting Checklist</a>    <ol>
+      <li><a href="#container-wont-start--keeps-restarting" id="markdown-toc-container-wont-start--keeps-restarting">Container won’t start / keeps restarting</a></li>
+      <li><a href="#cannot-connect-to-docker-daemon" id="markdown-toc-cannot-connect-to-docker-daemon">Cannot connect to Docker daemon</a></li>
+      <li><a href="#port-already-in-use" id="markdown-toc-port-already-in-use">Port already in use</a></li>
+      <li><a href="#out-of-disk-space" id="markdown-toc-out-of-disk-space">Out of disk space</a></li>
+      <li><a href="#general-diagnostic-sequence" id="markdown-toc-general-diagnostic-sequence">General diagnostic sequence</a></li>
+    </ol>
+  </li>
+  <li><a href="#9-best-practices-summary" id="markdown-toc-9-best-practices-summary">9. Best Practices Summary</a></li>
+</ol>
+
+<h2 id="1-container-lifecycle">1. Container Lifecycle</h2>
+
+<p class="note">Replace the “testapp” with the name of your container or container ID, these details can be obtained from the output of the docker ps command.</p>
+
+<h3 id="basic-operations">Basic Operations</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker start testapp</code></td>
+      <td>Start a stopped container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker stop testapp</code></td>
+      <td>Gracefully stop a running container (SIGTERM, then SIGKILL after 10s)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker restart testapp</code></td>
+      <td>Stop then start a container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker kill testapp</code></td>
+      <td>Immediately kill a container (SIGKILL)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker rm testapp</code></td>
+      <td>Remove a stopped container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker rm -f testapp</code></td>
+      <td>Force remove a running container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker run -d --name testapp --restart unless-stopped image:tag</code></td>
+      <td>Run container in background with auto-restart policy</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">Always set a –restart policy (unless-stopped or on-failure) for long-running services so containers recover after host reboots.</p>
+
+<h3 id="inspect-running-containers">Inspect Running Containers</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker ps</code></td>
+      <td>Start a stopped container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker ps -a</code></td>
+      <td>Gracefully stop a running container (SIGTERM, then SIGKILL after 10s)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker ps --format 'table  {{.Names}}\t{{.Status}}\t{{.Ports}}'</code></td>
+      <td>Custom output format</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker inspect testapp</code></td>
+      <td>Full JSON metadata for a container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker stats</code></td>
+      <td>Live CPU / memory / network / disk I/O</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker top testapp</code></td>
+      <td>Show running processes inside a container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker port testapp</code></td>
+      <td>Show port mappings</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="2-image-management">2. Image Management</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker images</code></td>
+      <td>List local images</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker pull image:tag</code></td>
+      <td>Pull an image from a registry</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker build -t name:tag .</code></td>
+      <td>Build an image from a Dockerfile in current directory</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker rmi image:tag</code></td>
+      <td>Remove a local image</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker rmi $(docker images -q --filter dangling=true)</code></td>
+      <td>Remove all dangling (untagged) images</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker image prune -a</code></td>
+      <td>Remove all unused images (not referenced by any container)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker tag src:tag dst:tag</code></td>
+      <td>Tag an image with a new name</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker push image:tag</code></td>
+      <td>Push image to a registry</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker save image:tag | gzip &gt; image.tar.gz</code></td>
+      <td>Export image to a compressed tar</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker load &lt; image.tar.gz</code></td>
+      <td>Import a previously saved image</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">Always pin image versions in production (e.g. postgres:17, not postgres:latest). Latest can silently pull a major version bump with breaking changes on the next pull.</p>
+
+<h2 id="3-logs--debugging">3. Logs &amp; Debugging</h2>
+
+<h3 id="working-with-logs">Working with logs</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker logs testapp</code></td>
+      <td>Print all logs for a container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker logs -f testapp</code></td>
+      <td>Tail logs in real time (Ctrl+C to exit)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker logs --tail 100 testapp</code></td>
+      <td>Show last 100 lines only</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker logs --since 1h testapp</code></td>
+      <td>Show logs from the past hour</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker logs --timestamps testapp</code></td>
+      <td>Include timestamps in output</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="exec--shell-access">Exec &amp; Shell Access</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker exec -it testapp bash</code></td>
+      <td>Open an interactive bash shell inside a running container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker exec -it testapp sh</code></td>
+      <td>Use sh if bash is not available (Alpine-based images)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker exec testapp cat /etc/hosts</code></td>
+      <td>Run a single command without an interactive shell</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker exec -u root testapp bash</code></td>
+      <td>Shell in as root user</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="copying-files">Copying Files</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker cp testapp:/path/in/container ./local</code></td>
+      <td>Copy a file out of a container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker cp ./local testapp:/path/in/container</code></td>
+      <td>Copy a file into a container</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="4-docker-compose-commands">4. Docker Compose Commands</h2>
+
+<p class="note">All commands use “docker compose” (space, no hyphen). The legacy docker-compose binary is not installed on Docker Engine v23+.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose up -d</code></td>
+      <td>Start all services in detached mode</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose up -d --build</code></td>
+      <td>Rebuild images before starting</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose up -d &lt;service&gt;</code></td>
+      <td>Start a single named service</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose down</code></td>
+      <td>Stop and remove containers and networks</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose down -v</code></td>
+      <td>Also remove named volumes (destructive — wipes DB data)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose restart</code></td>
+      <td>Restart all services</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose restart &lt;service&gt;</code></td>
+      <td>Restart a single service</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose stop</code></td>
+      <td>Stop containers without removing them</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose start</code></td>
+      <td>Start previously stopped containers</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose pull</code></td>
+      <td>Pull latest images for all services</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose ps</code></td>
+      <td>List service status</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose logs -f</code></td>
+      <td>Tail logs for all services</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose logs -f &lt;service&gt;</code></td>
+      <td>Tail logs for one service</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose exec &lt;service&gt; bash</code></td>
+      <td>Shell into a running service container</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker compose config</code></td>
+      <td>Validate and display the resolved compose config</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="compose-file-best-practices">Compose File Best Practices</h3>
+<ul>
+  <li>Never use image: postgres:latest for databases — always pin a major version such as postgres:17.</li>
+  <li>For Postgres 18+, mount volumes at /var/lib/postgresql (not /var/lib/postgresql/data).</li>
+  <li>Remove the top-level version: key it is obsolete in Compose v2 and generates a warning.</li>
+  <li>Use named volumes (not bind mounts) for database data to avoid host permission issues.</li>
+  <li>Set restart: unless-stopped on all long-running services.</li>
+  <li>Use .env files for secrets never hardcode passwords in docker-compose.yaml.</li>
+</ul>
+
+<h2 id="5-volumes--networks">5. Volumes &amp; Networks</h2>
+
+<h3 id="volumes">Volumes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker volume ls</code></td>
+      <td>List all volumes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker volume inspect &lt;name&gt;</code></td>
+      <td>Show volume metadata and mount path</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker volume rm &lt;name&gt;</code></td>
+      <td>Remove a volume (must not be in use)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker volume prune</code></td>
+      <td>Remove all unused volumes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker run -v myvolume:/data image</code></td>
+      <td>Mount a named volume into a container</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">docker volume prune and docker compose down -v are destructive. They permanently delete volume data including database files. Always confirm before running.</p>
+
+<h3 id="networks">Networks</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network ls</code></td>
+      <td>List all networks</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network inspect &lt;name&gt;</code></td>
+      <td>Show network details and connected containers</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network create mynet</code></td>
+      <td>Create a custom bridge network</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network connect mynet &lt;container&gt;</code></td>
+      <td>Connect a running container to a network</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network disconnect mynet &lt;container&gt;</code></td>
+      <td>Disconnect a container from a network</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network prune</code></td>
+      <td>Remove unused networks</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="6-system-cleanup">6. System Cleanup</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker system df</code></td>
+      <td>Show disk usage by images, containers, volumes, cache</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker system prune</code></td>
+      <td>Remove stopped containers, unused networks, dangling images and build cache</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker system prune -a</code></td>
+      <td>Also remove all unused images (not just dangling ones)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker system prune -a -v</code></td>
+      <td>Also remove unused volumes — most aggressive, use with caution</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker image prune</code></td>
+      <td>Remove only dangling images</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker container prune</code></td>
+      <td>Remove only stopped containers</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker volume prune</code></td>
+      <td>Remove only unused volumes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">docker network prune</code></td>
+      <td>Remove only unused networks</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">Run docker system df regularly to monitor disk usage. Build cache can accumulate quickly on CI hosts.</p>
+
+<h2 id="7-permissions--the-docker-group">7. Permissions &amp; the Docker Group</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo usermod -aG docker $USER</code></td>
+      <td>Add current user to the docker group</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">newgrp docker</code></td>
+      <td>Activate group change without re-logging</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">groups</code></td>
+      <td>Verify current user group memberships</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ls -la /var/run/docker.sock</code></td>
+      <td>Check socket ownership and permissions</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo systemctl status docker</code></td>
+      <td>Check whether the Docker daemon is running</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo systemctl restart docker</code></td>
+      <td>Restart the Docker daemon</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note">The docker group grants root-equivalent access to the host. Only add trusted users. In production environments consider running Docker in rootless mode instead.</p>
+
+<h2 id="8-troubleshooting-checklist">8. Troubleshooting Checklist</h2>
+
+<h3 id="container-wont-start--keeps-restarting">Container won’t start / keeps restarting</h3>
+
+<ul>
+  <li>Run docker logs <container> to read the error output.</container></li>
+  <li>Run docker inspect <container> and check the State section for exit codes.</container></li>
+  <li>Verify all required environment variables are set in docker-compose.yaml.</li>
+  <li>Check volume mount paths — especially for Postgres 18+ (see Section 4).</li>
+  <li>Confirm the image tag exists: docker pull <image:tag>.</image:tag></li>
+</ul>
+
+<h3 id="cannot-connect-to-docker-daemon">Cannot connect to Docker daemon</h3>
+
+<ul>
+  <li>Check the daemon is running: sudo systemctl status docker.</li>
+  <li>Check user permissions: groups — docker must appear.</li>
+  <li>If missing from groups: sudo usermod -aG docker $USER then log out and back in.</li>
+  <li>As an immediate workaround, prefix the command with sudo.</li>
+</ul>
+
+<h3 id="port-already-in-use">Port already in use</h3>
+
+<ul>
+  <li>Identify what is using the port: <code class="language-plaintext highlighter-rouge">sudo ss -tlnp | grep &lt;port&gt;</code></li>
+  <li>Stop the conflicting process or change the host port in docker-compose.yaml.</li>
+</ul>
+
+<h3 id="out-of-disk-space">Out of disk space</h3>
+
+<ul>
+  <li>Check usage: docker system df</li>
+  <li>Remove dangling images and stopped containers: docker system prune</li>
+  <li>For a full clean (caution — removes all unused resources): docker system prune -a -v</li>
+</ul>
+
+<h3 id="general-diagnostic-sequence">General diagnostic sequence</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker ps -a</code> see status of all containers</li>
+  <li><code class="language-plaintext highlighter-rouge">docker logs &lt;container&gt;</code> read the error</li>
+  <li><code class="language-plaintext highlighter-rouge">docker inspect &lt;container&gt;</code> check full config and state</li>
+  <li><code class="language-plaintext highlighter-rouge">docker compose config</code> validate the compose file</li>
+  <li><code class="language-plaintext highlighter-rouge">sudo systemctl status docker</code> check the daemon itself</li>
+</ul>
+
+<h2 id="9-best-practices-summary">9. Best Practices Summary</h2>
+
+<ul>
+  <li>Pin image versions — never use :latest for databases or any critical service in production.</li>
+  <li>Use named volumes for persistent data — avoid bind mounts for database containers.</li>
+  <li>Set restart policies — restart: unless-stopped keeps services up after host reboots.</li>
+  <li>Use .env files for secrets — never commit passwords to version control inside compose files.</li>
+  <li>Remove the version: key from Compose files — it is obsolete in Compose v2.</li>
+  <li>Run docker system prune regularly on long-lived hosts to reclaim disk space.</li>
+  <li>Check docker logs immediately when a container exits — the error is almost always there.</li>
+  <li>For Postgres 18+, mount volumes at /var/lib/postgresql (not the /data subdirectory).</li>
+  <li>Do not add users to the docker group casually — it is equivalent to granting sudo.</li>
+  <li>Use docker compose config to validate compose files before deploying changes.</li>
+</ul>
+
+</article>
+
+
+  <hr class="dingbat related mb6" />
+
+
+
+
+
+  
+<footer class="content" role="contentinfo">
+  <hr/>
+  
+    <p><small class="copyright">© 2024–2026 Lundi Ngantweni. All rights reserved.
+</small></p>
+  
+  
+    <nav class="legal"><small>
+    
+      
+      <a class="heading flip-title" href="/LICENSE/">LICENSE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/NOTICE/">NOTICE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/CHANGELOG/">CHANGELOG</a>
+      
+    
+    </small></nav>
+  
+  
+  <hr class="sr-only"/>
+</footer>
+
+
+</main>
+
+  <hy-drawer
+  id="_drawer"
+  class=""
+  side="left"
+  threshold="10"
+  noscroll
+  
+>
+  <header id="_sidebar" class="sidebar" role="banner">
+    
+
+
+
+
+<div class="sidebar-bg " style="background:#0d1117"></div>
+
+    <div class="sidebar-sticky">
+  <div class="sidebar-about">
+    
+      <a class="no-hover" href="/" tabindex="-1">
+        <img src="/assets/img/logo.svg" class="avatar" alt="Lundi Ngantweni" width="120" height="120" loading="lazy" />
+      </a>
+    
+    <a class="sidebar-title" href="/"><h2 class="h1">Lundi Ngantweni</h2></a>
+    
+    
+      <p class="">
+        Cloud &amp; Systems Engineer
+
+      </p>
+    
+  </div>
+
+  <nav class="sidebar-nav heading" role="navigation">
+    <span class="sr-only">Navigation:</span>
+<ul>
+  
+    
+      
+      <li>
+        <a
+          id="_drawer--opened"
+          href="/blog/"
+          class="sidebar-nav-item "
+          
+        >
+          Blog
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/projects/"
+          class="sidebar-nav-item "
+          
+        >
+          Projects
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/resume/"
+          class="sidebar-nav-item "
+          
+        >
+          Résumé
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/docs/"
+          class="sidebar-nav-item "
+          
+        >
+          Documentation
+        </a>
+      </li>
+    
+  
+</ul>
+
+  </nav>
+
+  
+  <div class="sidebar-social">
+    <span class="sr-only">Social:</span>
+<ul>
+  
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/lu-ngantweni" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://www.linkedin.com/in/lundi-n-649a19127/" title="LinkedIn" class="no-mark-external">
+      <span class="icon-linkedin2"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="mailto:lundingantweni@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+  
+</ul>
+
+  </div>
+</div>
+  </header>
+</hy-drawer>
+<hr class="sr-only" hidden />
+
+</hy-push-state>
+
+
+  <!--[if gt IE 10]><!---->
+  <script nomodule>(()=>{var t,n=document.createElement("script");!("noModule"in n)&&"onbeforeload"in n&&(t=!1,document.addEventListener("beforeload",function(e){if(e.target===n)t=!0;else if(!e.target.hasAttribute("nomodule")||!t)return;e.preventDefault()},!0),n.type="module",n.src=".",document.head.appendChild(n),n.remove())})();
+</script>
+  <script src="/assets/js/hydejack-9.2.1.js" type="module"></script>
+  <script src="/assets/js/LEGACY-hydejack-9.2.1.js" nomodule defer></script>
+  
+
+  
+
+  <script type="module">
+    if ('serviceWorker' in navigator) {
+      /**/
+      navigator.serviceWorker.getRegistration()
+        .then(r => r.unregister())
+        .catch(() => {});
+      /**/
+    }
+  </script>
+<!--<![endif]-->
+  <!-- Custom body scripts -->
+
+<!-- Swipe hint on cover page (mobile only) -->
+<script>
+(function() {
+  // Only show on cover pages
+  if (!document.body.querySelector('.sidebar.cover, hy-drawer.cover')) return;
+  // Only show on touch/small screens
+  if (window.innerWidth > 1024) return;
+  // Only show once per session
+  if (sessionStorage.getItem('swipe-hint-shown')) return;
+
+  var hint = document.createElement('div');
+  hint.className = 'swipe-hint';
+  hint.innerHTML = '<span class="swipe-hint-icon">←</span><span class="swipe-hint-text">Swipe left to enter</span>';
+  document.body.appendChild(hint);
+  sessionStorage.setItem('swipe-hint-shown', '1');
+
+  // Auto-dismiss after 4 seconds or on tap
+  var dismiss = function() {
+    hint.classList.add('swipe-hint-hidden');
+    setTimeout(function() { hint.remove(); }, 500);
+  };
+  hint.addEventListener('click', dismiss);
+  setTimeout(dismiss, 4000);
+})();
+</script>
+
+
+
+<div hidden>
+  
+  <h2 class="sr-only">Templates (for web app):</h2>
+
+  <template id="_animation-template">
+  <div class="animation-main fixed-top">
+    <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+</ul></nav>
+    <div class="content">
+      <div class="page"></div>
+    </div>
+  </div>
+</template>
+
+  <template id="_loading-template">
+  <div class="loading nav-btn fr">
+    <span class="sr-only">Loading…</span>
+    <span class="icon-cog"></span>
+  </div>
+</template>
+
+  <template id="_error-template">
+  <div class="page">
+    <h1 class="page-title">Error</h1>
+    
+    
+    <p class="lead">
+      Sorry, an error occurred while loading <a class="this-link" href=""></a>.
+
+    </p>
+  </div>
+</template>
+
+  <template id="_permalink-template">
+  <a href="#" class="permalink">
+    <span class="sr-only">Permalink</span>
+    <span class="content-hash"></span>
+  </a>
+</template>
+
+  
+  
+    <template id="_dark-mode-template">
+  <button id="_dark-mode" class="nav-btn no-hover" >
+    <span class="sr-only">Dark Mode</span>
+    <span class="icon-brightness-contrast"></span>
+  </button>
+</template>
+
+  
+  
+    <template id="_search-template">
+  <button id="_search" class="nav-btn no-hover">
+    <label class="sr-only" for="_search-input">Search</label>
+    <span class="icon-search"></span>
+  </button>
+  <div id="_search-box">
+    <div class="nav-btn">
+      <span class="icon-search"></span>
+    </div>
+    <input 
+      id="_search-input"
+      type="search"
+      class="form-control form-control-lg nav-btn"
+      placeholder="Build with JEKYLL_ENV=production to enable search."
+    />
+    <button type="reset" class="nav-btn no-hover">
+      <span class="sr-only">Close</span>
+      <span class="icon-cross"></span>
+    </button>
+  </div>
+  <div id="_hits"></div>
+</template>
+
+  
+</div>
+
+</body>
+</html>

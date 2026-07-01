@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+
+
+<head>
+  
+
+
+
+
+  <meta name="robots" content="noindex">
+
+
+
+  
+    
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Linux Boot Process | Lundi Ngantweni</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Linux Boot Process" />
+<meta name="author" content="Lundi Ngantweni" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="How you install Hydejack depends on whether you start a new site, or change the theme of an existing site." />
+<meta property="og:description" content="How you install Hydejack depends on whether you start a new site, or change the theme of an existing site." />
+<meta property="og:site_name" content="Lundi Ngantweni" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Linux Boot Process" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Lundi Ngantweni"},"dateModified":"2026-04-06T18:14:31+00:00","description":"How you install Hydejack depends on whether you start a new site, or change the theme of an existing site.","headline":"Linux Boot Process","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/logo.svg"},"name":"Lundi Ngantweni"},"url":"/docs/Linux/boot/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  
+    <meta name="keywords" content="cloud,aws,linux,devops,infrastructure,automation,systems-engineering">
+  
+
+
+
+  <meta name="color-scheme" content="dark light">
+
+
+
+  <meta name="theme-color" content="rgb(13,17,23)">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lundi Ngantweni">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="application-name" content="Lundi Ngantweni">
+
+<meta name="generator" content="Hydejack v9.2.1" />
+
+
+<link rel="alternate" href="/docs/Linux/boot/" hreflang="en">
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Lundi Ngantweni" />
+
+
+<link rel="shortcut icon"    href="/assets/icons/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/icons/favicon.svg">
+
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+
+
+<link rel="preload" href="/assets/img/swipe.svg" as="image" id="_hrefSwipeSVG">
+
+<link rel="dns-prefetch" href="/assets/js/search-worker-9.2.1.js" as="worker" id="_hrefSearch">
+
+  
+  <link rel="dns-prefetch" href="/assets/bower_components/katex/dist/katex.min.css" id="_katexPreload">
+  <noscript><link rel="stylesheet" href="/assets/bower_components/katex/dist/katex.min.css"></noscript>
+
+
+
+
+
+<script>((r,a)=>{function d(e,t,n,o){e.addEventListener?e.addEventListener(t,n,o):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n}r.loadJS=function(e,t){var n=a.createElement("script"),e=(n.src=e,t&&d(n,"load",t,{once:!0}),a.scripts[0]);return e.parentNode.insertBefore(n,e),n},r._loaded=!1,r.loadJSDeferred=function(e,t){var n=a.createElement("script");function o(){r._loaded=!0,t&&d(n,"load",t,{once:!0});var e=a.scripts[0];e.parentNode.insertBefore(n,e)}return n.src=e,r._loaded?o():d(r,"load",o,{once:!0}),n},r.setRel=r.setRelStylesheet=function(e){d(a.getElementById(e),"load",function(){this.rel="stylesheet"},{once:!0})}})(window,document);
+!function(a){"use strict";var b=function(b,c,d){function e(a){return h.body?a():void setTimeout(function(){e(a)})}function f(){i.addEventListener&&i.removeEventListener("load",f),i.media=d||"all"}var g,h=a.document,i=h.createElement("link");if(c)g=c;else{var j=(h.body||h.getElementsByTagName("head")[0]).childNodes;g=j[j.length-1]}var k=h.styleSheets;i.rel="stylesheet",i.href=b,i.media="only x",e(function(){g.parentNode.insertBefore(i,c?g:g.nextSibling)});var l=function(a){for(var b=i.href,c=k.length;c--;)if(k[c].href===b)return a();setTimeout(function(){l(a)})};return i.addEventListener&&i.addEventListener("load",f),i.onloadcssdefined=l,l(f),i};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
+!function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);
+!function(w) {
+  w._baseURL = '/';
+  w._publicPath = '/assets/js/';
+  w._noPushState = false;
+  w._noDrawer = false;
+  w._noNavbar = false;
+  w._noToc = false;
+  w._noSearch = false;
+  w._advertise = false;
+  w._search = {
+    DATA_URL: '/assets/sitedata.json?no-cache',
+    STORAGE_KEY: 'mini-search/',
+    INDEX_KEY: 'index--2026-07-01T15:14:31+00:00',
+  };
+  w._clapButton = true;
+}(window);</script>
+
+
+
+<!--[if gt IE 8]><!---->
+
+  
+
+
+
+
+<link rel="stylesheet" href="/assets/css/hydejack-9.2.1.css" id="_stylePreload">
+<link rel="stylesheet" href="/assets/icomoon/style.css" id="_iconsPreload">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600%7CJetBrains+Mono:400,500&display=swap" id="_fontsPreload">
+
+
+
+  <style id="_pageStyle">
+
+html{--accent-color: rgb(88,166,255);--accent-color-faded: rgba(0, 200, 255, 0.5);--accent-color-highlight: rgba(0, 200, 255, 0.1);--accent-color-darkened: rgb(88,166,255);--theme-color: rgb(13,17,23);--dark-mode-body-bg: #0d1520;--dark-mode-border-color: #1e3a52}
+</style>
+
+
+<!--<![endif]-->
+
+
+<!-- Favicon (SVG) -->
+<link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
+
+<!-- Custom stylesheet -->
+<link rel="stylesheet" href="/assets/css/custom.css">
+
+
+</head>
+
+<body class="no-break-layout">
+  
+<script>
+  window._sunrise = 6;
+  window._sunset =  18;
+  ((e,s)=>{var d="light-mode",a="dark-mode",o=(new Date).getHours();"matchMedia"in e&&e.matchMedia("(prefers-color-scheme)")||(e=(o=o<=e._sunrise||o>=e._sunset?a:d)==a?d:a,s.body.classList.add(o),s.body.classList.remove(e))})(window,document);
+
+</script>
+
+
+
+<hy-push-state
+  id="_pushState"
+  replace-selector="#_main"
+  link-selector="a[href]:not([href^='/assets/']):not(.external):not(.no-push-state)"
+  script-selector="script"
+  duration="500"
+  hashchange
+>
+  
+  
+  <div id="_navbar" class="navbar fixed-top">
+  <div class="content">
+    <span class="sr-only">Jump to:</span>
+    <div class="nav-btn-bar">
+      <a id="_menu" class="nav-btn no-hover" href="#_drawer--opened">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-menu"></span>
+      </a>
+      <div class="nav-span"></div>
+    </div>
+  </div>
+</div>
+<hr class="sr-only" hidden />
+
+  <main
+  id="_main"
+  class="content layout-page"
+  role="main"
+>
+  <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+    <li><a href="/">home</a></li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/">docs</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docs/Linux/">Linux</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>boot</span>
+        
+      </li>
+    
+  
+</ul></nav>
+  <article class="page mb6" role="article">
+  <header>
+    <h1 class="page-title">Linux Boot Process</h1>
+    
+
+
+
+  
+    <div class="hr pb0"></div>
+  
+
+
+  </header>
+
+  <p>The Linux boot process is a complex sequence of events that transforms a powered-off computer into a fully functional operating system ready for user interaction. This document provides a detailed exploration of each stage, from the initial electrical signals to the final userspace initialization.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#stage-1-power-on-and-hardware-initialization" id="markdown-toc-stage-1-power-on-and-hardware-initialization">Stage 1: Power-On and Hardware Initialization</a>    <ol>
+      <li><a href="#pressing-the-power-button" id="markdown-toc-pressing-the-power-button">Pressing the Power Button</a></li>
+      <li><a href="#reset-vector-and-cpu-initialization" id="markdown-toc-reset-vector-and-cpu-initialization">Reset Vector and CPU Initialization</a></li>
+    </ol>
+  </li>
+  <li><a href="#stage-2-firmware-execution-biosuefi" id="markdown-toc-stage-2-firmware-execution-biosuefi">Stage 2: Firmware Execution (BIOS/UEFI)</a>    <ol>
+      <li><a href="#bios-basic-inputoutput-system" id="markdown-toc-bios-basic-inputoutput-system">BIOS (Basic Input/Output System)</a></li>
+      <li><a href="#uefi-unified-extensible-firmware-interface" id="markdown-toc-uefi-unified-extensible-firmware-interface">UEFI (Unified Extensible Firmware Interface)</a></li>
+    </ol>
+  </li>
+  <li><a href="#stage-3-bootloader-execution" id="markdown-toc-stage-3-bootloader-execution">Stage 3: Bootloader Execution</a>    <ol>
+      <li><a href="#grub-grand-unified-bootloader" id="markdown-toc-grub-grand-unified-bootloader">GRUB (Grand Unified Bootloader)</a></li>
+      <li><a href="#kernel-command-line-parameters" id="markdown-toc-kernel-command-line-parameters">Kernel Command-Line Parameters</a></li>
+    </ol>
+  </li>
+  <li><a href="#stage-4-kernel-initialization" id="markdown-toc-stage-4-kernel-initialization">Stage 4: Kernel Initialization</a>    <ol>
+      <li><a href="#kernel-decompression-and-setup" id="markdown-toc-kernel-decompression-and-setup">Kernel Decompression and Setup</a></li>
+      <li><a href="#early-kernel-initialization-start_kernel" id="markdown-toc-early-kernel-initialization-start_kernel">Early Kernel Initialization (start_kernel)</a></li>
+      <li><a href="#initial-ram-filesystem-initramfs" id="markdown-toc-initial-ram-filesystem-initramfs">Initial RAM Filesystem (initramfs)</a></li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="stage-1-power-on-and-hardware-initialization">Stage 1: Power-On and Hardware Initialization</h2>
+
+<h4 id="pressing-the-power-button">Pressing the Power Button</h4>
+
+<p>When you press the power button, you complete an electrical circuit that signals the power supply unit (PSU) to begin operation. The PSU performs a Power-On Self-Test (POST) and, if successful, sends a “power good” signal to the motherboard. This signal indicates that stable power is available to all components.</p>
+
+<h4 id="reset-vector-and-cpu-initialization">Reset Vector and CPU Initialization</h4>
+
+<p>Upon receiving power, the CPU is held in a reset state. When released from reset, the CPU’s instruction pointer is set to a predefined memory address called the reset vector. On x86/x86_64 architectures, this address is typically 0xFFFFFFF0, which is near the top of the 4GB address space and maps to the firmware ROM.</p>
+
+<p>The CPU begins executing in real mode (16-bit mode), a legacy compatibility mode that provides access to only 1MB of memory. At this point, no operating system code has loaded—only the firmware is accessible.</p>
+
+<h2 id="stage-2-firmware-execution-biosuefi">Stage 2: Firmware Execution (BIOS/UEFI)</h2>
+
+<h4 id="bios-basic-inputoutput-system">BIOS (Basic Input/Output System)</h4>
+
+<p>Traditional BIOS firmware performs several critical functions:</p>
+
+<p><strong><em>Power-On Self-Test (POST)</em></strong>: The BIOS executes diagnostic tests on system hardware including:</p>
+
+<ul>
+  <li>Memory integrity checks</li>
+  <li>CPU verification</li>
+  <li>Keyboard and peripheral detection</li>
+  <li>Video card initialization</li>
+  <li>Storage device enumeration</li>
+</ul>
+
+<p><strong><em>Hardware Initialization</em></strong>: The BIOS initializes and configures hardware components, setting up interrupt vectors, configuring the Programmable Interrupt Controller (PIC), and establishing basic I/O operations.</p>
+
+<p><strong><em>Boot Device Selection</em></strong>: The BIOS reads the boot order configuration from CMOS memory and attempts to locate a bootable device. It searches for a valid Master Boot Record (MBR) by reading the first 512 bytes (sector 0) of each configured boot device.</p>
+
+<p><strong><em>MBR Loading</em></strong>: Once a valid MBR is found (identified by the boot signature 0x55AA in bytes 510-511), the BIOS loads this 512-byte sector into memory at address 0x7C00 and transfers execution to it.</p>
+
+<h4 id="uefi-unified-extensible-firmware-interface">UEFI (Unified Extensible Firmware Interface)</h4>
+
+<p>Modern UEFI firmware provides enhanced capabilities:</p>
+
+<p><strong><em>Initialization</em></strong>: UEFI performs similar POST operations but with a more sophisticated architecture. It operates in 32-bit or 64-bit mode (not limited to 16-bit real mode) and provides a more extensive pre-boot environment.</p>
+
+<p><strong><em>GPT Support</em></strong>: UEFI natively supports the GUID Partition Table (GPT) scheme, which overcomes MBR limitations (2TB disk size limit, maximum 4 primary partitions).</p>
+
+<p><strong><em>Boot Manager</em></strong>: UEFI includes a built-in boot manager that reads boot entries from NVRAM. Each entry points to an EFI application (typically a bootloader) stored in the EFI System Partition (ESP), a FAT32-formatted partition.</p>
+
+<p><strong><em>Secure Boot</em></strong>: UEFI can verify cryptographic signatures of bootloaders and kernel images, preventing unauthorized code execution during boot.</p>
+
+<h2 id="stage-3-bootloader-execution">Stage 3: Bootloader Execution</h2>
+<h4 id="grub-grand-unified-bootloader">GRUB (Grand Unified Bootloader)</h4>
+
+<p>GRUB is the most common bootloader for Linux systems and operates in multiple stages:</p>
+
+<p><strong><em>Stage 1 (boot.img)</em></strong>: In BIOS systems, this 512-byte code resides in the MBR. Its sole purpose is to load Stage 1.5 or Stage 2. In UEFI systems, the firmware directly loads the GRUB EFI application from the ESP.</p>
+
+<p><strong><em>Stage 1.5 (core.img)</em></strong>: This intermediate stage contains filesystem drivers. It’s typically stored in the space between the MBR and the first partition (MBR gap) or in a dedicated boot partition. Stage 1.5 provides the ability to read filesystems like ext4, XFS, or Btrfs.</p>
+
+<p><strong><em>Stage 2</em></strong>: The full GRUB environment loads, presenting the boot menu interface. GRUB reads its configuration from /boot/grub/grub.cfg (or /boot/grub2/grub.cfg), which contains:</p>
+
+<ul>
+  <li>Kernel image locations</li>
+  <li>Initial ramdisk (initrd/initramfs) locations</li>
+  <li>Kernel command-line parameters</li>
+  <li>Boot menu entries and timeout settings</li>
+</ul>
+
+<p>Kernel Loading: When a menu entry is selected, GRUB:</p>
+
+<ul>
+  <li>Loads the compressed kernel image (typically /boot/vmlinuz-<version>) into memory</version></li>
+  <li>Loads the initial RAM filesystem (initramfs/initrd) into memory</li>
+  <li>Passes control to the kernel with specified command-line parameters</li>
+</ul>
+
+<h4 id="kernel-command-line-parameters">Kernel Command-Line Parameters</h4>
+
+<p>Common parameters include:</p>
+
+<ul>
+  <li>root=/dev/sda1 or root=UUID=…: Specifies the root filesystem location</li>
+  <li>ro: Mounts root filesystem as read-only initially</li>
+  <li>quiet: Suppresses verbose boot messages</li>
+  <li>splash: Enables graphical boot splash screen</li>
+  <li>init=/sbin/init: Specifies the init system path</li>
+  <li>systemd.unit=rescue.target: Boots into a specific target</li>
+</ul>
+
+<h2 id="stage-4-kernel-initialization">Stage 4: Kernel Initialization</h2>
+<h4 id="kernel-decompression-and-setup">Kernel Decompression and Setup</h4>
+
+<p>The kernel image is compressed (using gzip, bzip2, or xz) to reduce size. The kernel contains a small decompression stub that:</p>
+
+<ul>
+  <li>Decompresses the kernel into memory</li>
+  <li>Performs relocation if necessary</li>
+  <li>Jumps to the kernel’s entry point</li>
+</ul>
+
+<h4 id="early-kernel-initialization-start_kernel">Early Kernel Initialization (start_kernel)</h4>
+
+<p>The start_kernel() function in init/main.c is the kernel’s main entry point. It performs initialization in a specific order:</p>
+
+<p><strong><em>Architecture-Specific Setup</em></strong>: Calls setup_arch() to initialize CPU-specific features, memory management structures, and hardware detection.</p>
+
+<p><strong><em>Memory Management Initialization</em></strong>:</p>
+
+<ul>
+  <li>Sets up page tables and enables paging</li>
+  <li>Initializes the buddy allocator for physical memory management</li>
+  <li>Configures memory zones (DMA, Normal, HighMem)</li>
+  <li>Establishes the slab allocator for kernel object caching</li>
+</ul>
+
+<p><strong><em>Trap and Interrupt Setup</em></strong>:</p>
+
+<ul>
+  <li>Configures the Interrupt Descriptor Table (IDT)</li>
+  <li>Sets up exception handlers for CPU faults</li>
+  <li>Initializes the interrupt controller (APIC on modern systems)</li>
+</ul>
+
+<p><strong><em>Scheduler Initialization</em></strong>: Configures the process scheduler, creating data structures for runqueues and initializing the first kernel thread (PID 0, the idle task).</p>
+
+<p><strong><em>Time Management</em></strong>: Initializes system timers, clocksources, and the tick mechanism for scheduling and timekeeping.</p>
+
+<p><strong><em>Console Initialization</em></strong>: Sets up early console output for kernel messages, enabling printk() output to be visible.
+Subsystem Initialization</p>
+
+<p>The kernel initializes various subsystems through a series of initcall functions organized by priority levels:</p>
+
+<p><strong><em>Core Subsystems</em></strong>:</p>
+
+<ul>
+  <li>Virtual File System (VFS) layer</li>
+  <li>Process management structures</li>
+  <li>Signal handling mechanisms</li>
+  <li>Inter-Process Communication (IPC) facilities</li>
+</ul>
+
+<p><strong><em>Device Model</em></strong>: Initializes the kernel’s device model, including:</p>
+
+<p>Sysfs filesystem mounting
+Device class registration
+Bus type registration (PCI, USB, etc.)</p>
+
+<p><strong><em>Driver Initialization</em></strong>: Loads built-in drivers in dependency order:</p>
+
+<ul>
+  <li>Bus drivers (PCI, USB controllers)</li>
+  <li>Storage controllers (SATA, NVMe, SCSI)</li>
+  <li>Network interface drivers</li>
+  <li>Input device drivers</li>
+  <li>Graphics drivers</li>
+</ul>
+
+<h4 id="initial-ram-filesystem-initramfs">Initial RAM Filesystem (initramfs)</h4>
+
+<p>The initramfs is a compressed cpio archive containing a minimal root filesystem. The kernel extracts it into a tmpfs filesystem mounted as the initial root. The initramfs typically contains:</p>
+
+<p><strong><em>Essential Binaries</em></strong>: Minimal shell, basic utilities (often from busybox)</p>
+
+<p><strong><em>Kernel Modules</em></strong>: Drivers needed to access the real root filesystem (filesystem drivers, RAID modules, encryption modules, device mapper)</p>
+
+<p><strong><em>Init Scripts</em></strong>: Scripts that perform early userspace tasks:</p>
+
+<ul>
+  <li>Loading necessary kernel modules</li>
+  <li>Assembling software RAID arrays</li>
+  <li>Unlocking encrypted volumes (LUKS)</li>
+  <li>Configuring network interfaces for network boot</li>
+  <li>Mounting the real root filesystem</li>
+</ul>
+
+<p><strong><em>udev/systemd-udevd</em></strong>: Device manager for dynamic device node creation</p>
+
+<p>Mounting the Real Root Filesystem</p>
+
+<p>The initramfs init script performs the following:</p>
+<ul>
+  <li>Module Loading: Uses modprobe to load required drivers based on detected hardware</li>
+  <li>Device Detection: Waits for the root device to appear (using udev)</li>
+  <li>Filesystem Check: Optionally runs fsck on the root filesystem</li>
+  <li>Root Mount: Mounts the real root filesystem (specified by the root= kernel parameter) at /sysroot or similar mountpoint</li>
+  <li>Switch Root: Uses switch_root or pivot_root to change the root filesystem from initramfs to the real root, then executes the real init system</li>
+</ul>
+
+<p class="read-more">Continue with <a href="config.md" class="heading flip-title">Config</a></p>
+
+
+</article>
+
+
+  <hr class="dingbat related mb6" />
+
+
+
+
+
+  
+<footer class="content" role="contentinfo">
+  <hr/>
+  
+    <p><small class="copyright">© 2024–2026 Lundi Ngantweni. All rights reserved.
+</small></p>
+  
+  
+    <nav class="legal"><small>
+    
+      
+      <a class="heading flip-title" href="/LICENSE/">LICENSE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/NOTICE/">NOTICE</a>
+      |
+    
+      
+      <a class="heading flip-title" href="/CHANGELOG/">CHANGELOG</a>
+      
+    
+    </small></nav>
+  
+  
+  <hr class="sr-only"/>
+</footer>
+
+
+</main>
+
+  <hy-drawer
+  id="_drawer"
+  class=""
+  side="left"
+  threshold="10"
+  noscroll
+  
+>
+  <header id="_sidebar" class="sidebar" role="banner">
+    
+
+
+
+
+<div class="sidebar-bg " style="background:#0d1117"></div>
+
+    <div class="sidebar-sticky">
+  <div class="sidebar-about">
+    
+      <a class="no-hover" href="/" tabindex="-1">
+        <img src="/assets/img/logo.svg" class="avatar" alt="Lundi Ngantweni" width="120" height="120" loading="lazy" />
+      </a>
+    
+    <a class="sidebar-title" href="/"><h2 class="h1">Lundi Ngantweni</h2></a>
+    
+    
+      <p class="">
+        Cloud &amp; Systems Engineer
+
+      </p>
+    
+  </div>
+
+  <nav class="sidebar-nav heading" role="navigation">
+    <span class="sr-only">Navigation:</span>
+<ul>
+  
+    
+      
+      <li>
+        <a
+          id="_drawer--opened"
+          href="/blog/"
+          class="sidebar-nav-item "
+          
+        >
+          Blog
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/projects/"
+          class="sidebar-nav-item "
+          
+        >
+          Projects
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/resume/"
+          class="sidebar-nav-item "
+          
+        >
+          Résumé
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/docs/"
+          class="sidebar-nav-item "
+          
+        >
+          Documentation
+        </a>
+      </li>
+    
+  
+</ul>
+
+  </nav>
+
+  
+  <div class="sidebar-social">
+    <span class="sr-only">Social:</span>
+<ul>
+  
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/lu-ngantweni" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://www.linkedin.com/in/lundi-n-649a19127/" title="LinkedIn" class="no-mark-external">
+      <span class="icon-linkedin2"></span>
+      <span class="sr-only">LinkedIn</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="mailto:lundingantweni@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+  
+</ul>
+
+  </div>
+</div>
+  </header>
+</hy-drawer>
+<hr class="sr-only" hidden />
+
+</hy-push-state>
+
+
+  <!--[if gt IE 10]><!---->
+  <script nomodule>(()=>{var t,n=document.createElement("script");!("noModule"in n)&&"onbeforeload"in n&&(t=!1,document.addEventListener("beforeload",function(e){if(e.target===n)t=!0;else if(!e.target.hasAttribute("nomodule")||!t)return;e.preventDefault()},!0),n.type="module",n.src=".",document.head.appendChild(n),n.remove())})();
+</script>
+  <script src="/assets/js/hydejack-9.2.1.js" type="module"></script>
+  <script src="/assets/js/LEGACY-hydejack-9.2.1.js" nomodule defer></script>
+  
+
+  
+
+  <script type="module">
+    if ('serviceWorker' in navigator) {
+      /**/
+      navigator.serviceWorker.getRegistration()
+        .then(r => r.unregister())
+        .catch(() => {});
+      /**/
+    }
+  </script>
+<!--<![endif]-->
+  <!-- Custom body scripts -->
+
+<!-- Swipe hint on cover page (mobile only) -->
+<script>
+(function() {
+  // Only show on cover pages
+  if (!document.body.querySelector('.sidebar.cover, hy-drawer.cover')) return;
+  // Only show on touch/small screens
+  if (window.innerWidth > 1024) return;
+  // Only show once per session
+  if (sessionStorage.getItem('swipe-hint-shown')) return;
+
+  var hint = document.createElement('div');
+  hint.className = 'swipe-hint';
+  hint.innerHTML = '<span class="swipe-hint-icon">←</span><span class="swipe-hint-text">Swipe left to enter</span>';
+  document.body.appendChild(hint);
+  sessionStorage.setItem('swipe-hint-shown', '1');
+
+  // Auto-dismiss after 4 seconds or on tap
+  var dismiss = function() {
+    hint.classList.add('swipe-hint-hidden');
+    setTimeout(function() { hint.remove(); }, 500);
+  };
+  hint.addEventListener('click', dismiss);
+  setTimeout(dismiss, 4000);
+})();
+</script>
+
+
+
+<div hidden>
+  
+  <h2 class="sr-only">Templates (for web app):</h2>
+
+  <template id="_animation-template">
+  <div class="animation-main fixed-top">
+    <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+</ul></nav>
+    <div class="content">
+      <div class="page"></div>
+    </div>
+  </div>
+</template>
+
+  <template id="_loading-template">
+  <div class="loading nav-btn fr">
+    <span class="sr-only">Loading…</span>
+    <span class="icon-cog"></span>
+  </div>
+</template>
+
+  <template id="_error-template">
+  <div class="page">
+    <h1 class="page-title">Error</h1>
+    
+    
+    <p class="lead">
+      Sorry, an error occurred while loading <a class="this-link" href=""></a>.
+
+    </p>
+  </div>
+</template>
+
+  <template id="_permalink-template">
+  <a href="#" class="permalink">
+    <span class="sr-only">Permalink</span>
+    <span class="content-hash"></span>
+  </a>
+</template>
+
+  
+  
+    <template id="_dark-mode-template">
+  <button id="_dark-mode" class="nav-btn no-hover" >
+    <span class="sr-only">Dark Mode</span>
+    <span class="icon-brightness-contrast"></span>
+  </button>
+</template>
+
+  
+  
+    <template id="_search-template">
+  <button id="_search" class="nav-btn no-hover">
+    <label class="sr-only" for="_search-input">Search</label>
+    <span class="icon-search"></span>
+  </button>
+  <div id="_search-box">
+    <div class="nav-btn">
+      <span class="icon-search"></span>
+    </div>
+    <input 
+      id="_search-input"
+      type="search"
+      class="form-control form-control-lg nav-btn"
+      placeholder="Build with JEKYLL_ENV=production to enable search."
+    />
+    <button type="reset" class="nav-btn no-hover">
+      <span class="sr-only">Close</span>
+      <span class="icon-cross"></span>
+    </button>
+  </div>
+  <div id="_hits"></div>
+</template>
+
+  
+</div>
+
+</body>
+</html>
